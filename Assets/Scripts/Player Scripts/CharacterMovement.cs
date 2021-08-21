@@ -60,8 +60,6 @@ public class CharacterMovement : MonoBehaviour
             body.velocity = new Vector2(body.velocity.x, jumpForce);
             Jumps -= 1;
         }
-        Debug.Log(Horizontal);
-        Debug.Log(body.velocity);
     }
 
     private void OnCollisionEnter2D(Collision2D col)

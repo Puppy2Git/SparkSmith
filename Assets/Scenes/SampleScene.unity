@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 476035633}
   - component: {fileID: 476035632}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Grass
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
