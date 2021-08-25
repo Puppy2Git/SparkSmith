@@ -10,7 +10,11 @@ public class SideBox : MonoBehaviour
     {
         //Gets player script object
         move = transform.parent.parent.GetComponent<CharacterMovement>();
+<<<<<<< HEAD
         //Test
+=======
+
+>>>>>>> 5f22a05f7fc31713ffcd1461da159c1e14e8b0cd
         //Ignores Character hitbox and feet should be moved to hitboxes for better organization
         Physics2D.IgnoreCollision(transform.parent.parent.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         Physics2D.IgnoreCollision(transform.parent.Find("Leg Hitbox").GetComponent<Collider2D>(), GetComponent<Collider2D>());
