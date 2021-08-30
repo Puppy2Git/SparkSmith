@@ -9,8 +9,16 @@ public class CharacterMovement : MonoBehaviour
     public int maxJumps;
     public float speed = 5f;
     public float jumpForce;
+    public float dashForce;
+    private float dashTimer;
+    public float dashDelay;
+    public float dashDuration;
+    private float dashCooldown;
     private bool canMove;
+    private bool canDash = true;
+    private bool isDashing;
     private int restrictedMove = 0;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -18,16 +26,17 @@ public class CharacterMovement : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         resetJumps();
         canMove = true;
+        canDash = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Test
+        
         float Horizontal = Input.GetAxis("Horizontal");
 
         
-        //Base movement
+        //If and switch statement to determine if the character can move and if the movement is restricted.
         if (canMove)
         {
             switch (restrictedMove) {
@@ -51,31 +60,70 @@ public class CharacterMovement : MonoBehaviour
 
             }
 
-
+            //Changing Horizontal Velocity
             body.velocity = new Vector2(Horizontal * speed, body.velocity.y);
+            if (Input.GetKeyDown(KeyCode.Space) && Jumps > 0)
+            {
+                //Changing Vertical Velocity
+                body.velocity = new Vector2(body.velocity.x, jumpForce);
+                Jumps -= 1;
+
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash) {
+                Debug.Log("Dashing");
+                moveState(0, false); //Disable movement
+                body.gravityScale = 0f; //Ignores Gravity
+                isDashing = true;
+                canDash = false;
+                dashTimer = Time.time + dashDuration;
+
+            }
+
         }
         
-        if (Input.GetKeyDown(KeyCode.Space) && Jumps > 0)
-        {
-            body.velocity = new Vector2(body.velocity.x, jumpForce);
-            Jumps -= 1;
-        }
+        //Dash movement
+        Dash();
+        DashDelays();
     }
 
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.gameObject.tag == "Ground") {
-            resetJumps();
-        }
-    }
+    
 
+    //Resets the Jumps
     public void resetJumps() {
         Jumps = maxJumps;
     }
 
+
+    //This sets the canMove and the restrictedMove booleans
     public void moveState(int dir, bool state) {
         
         canMove = state;
         restrictedMove = dir;
+    }
+
+    //This handles Dashing it does not check the conditions for dashing
+    public void DashDelays() {
+        if (dashCooldown <= Time.time && !isDashing && !canDash) {
+            canDash = true;
+            Debug.Log("Can Dash");
+        }
+        
+    }
+
+    public void Dash() {
+        if (isDashing)
+        {
+
+            body.velocity = new Vector2(dashForce, 0);
+            if (dashTimer <= Time.time)
+            {
+                body.gravityScale = 1f;
+                moveState(0, true);
+                isDashing = false;
+                dashCooldown = Time.time + dashDelay;
+                Debug.Log("Stop dashing");
+            }
+
+        }
     }
 }

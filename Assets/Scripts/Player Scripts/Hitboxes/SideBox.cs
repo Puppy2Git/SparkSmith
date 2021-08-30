@@ -24,7 +24,6 @@ public class SideBox : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.tag == "Ground") {
-            Debug.Log("In col");
             //To the right
             if (col.gameObject.transform.position.x > transform.parent.parent.position.x) 
             {
@@ -41,8 +40,7 @@ public class SideBox : MonoBehaviour
     private void OnTriggerExit2D(Collider2D col)
     {
         if (col.gameObject.tag == "Ground")
-        {
-            Debug.Log("out col");
+        { 
             move.moveState(0, true);
         }
     }

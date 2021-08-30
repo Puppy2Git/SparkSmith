@@ -32,7 +32,6 @@ public class rotateScript : MonoBehaviour
     {
         Rigidbody2D bulletClone = (Rigidbody2D)Instantiate(bullet, transform.position, transform.rotation);
         bulletClone.velocity = transform.up * bulletSpeed;
-        Debug.Log(transform.up);
     }
 }
 
