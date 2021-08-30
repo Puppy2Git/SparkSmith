@@ -82,8 +82,8 @@ public class CharacterMovement : MonoBehaviour
         }
         
         //Dash movement
-        Dash();
-        DashDelays();
+        Dash();//Handles Dashing
+        DashDelays();//Handles Dash Delay
     }
 
     
@@ -105,11 +105,10 @@ public class CharacterMovement : MonoBehaviour
     public void DashDelays() {
         if (dashCooldown <= Time.time && !isDashing && !canDash) {
             canDash = true;
-            Debug.Log("Can Dash");
         }
         
     }
-
+    //This handles the active dash velocity
     public void Dash() {
         if (isDashing)
         {
@@ -121,7 +120,6 @@ public class CharacterMovement : MonoBehaviour
                 moveState(0, true);
                 isDashing = false;
                 dashCooldown = Time.time + dashDelay;
-                Debug.Log("Stop dashing");
             }
 
         }
