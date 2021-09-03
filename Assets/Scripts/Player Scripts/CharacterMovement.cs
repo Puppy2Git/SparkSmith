@@ -18,8 +18,7 @@ public class CharacterMovement : MonoBehaviour
     private bool canDash = true;
     private bool isDashing;
     private int restrictedMove = 0;
-
-
+    private float dashDir = 1f;
     // Start is called before the first frame update
     void Awake()
     {
@@ -69,12 +68,26 @@ public class CharacterMovement : MonoBehaviour
                 Jumps -= 1;
 
             }
+
+            //Determines dash direction
+            if (!isDashing)
+            {
+                if (Horizontal > 0)
+                {
+                    dashDir = 1f;
+                }
+                else if (Horizontal < 0)
+                {
+                    dashDir = -1f;
+                }
+            }
             if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash) {//Checks if the character is dashing or not and if pressing the dash key
                 moveState(false); //Disable movement
                 body.gravityScale = 0f; //Ignores Gravity
                 isDashing = true;
                 canDash = false;
                 dashTimer = Time.time + dashDuration;
+                
 
             }
 
@@ -115,8 +128,8 @@ public class CharacterMovement : MonoBehaviour
     public void Dash() {
         if (isDashing)
         {
-
-            body.velocity = new Vector2(dashForce, 0);
+            
+            body.velocity = new Vector2(dashForce * dashDir, 0);
             if (dashTimer <= Time.time)
             {
                 body.gravityScale = 1f;

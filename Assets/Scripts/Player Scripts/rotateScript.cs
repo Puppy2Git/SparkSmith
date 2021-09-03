@@ -28,6 +28,18 @@ public class rotateScript : MonoBehaviour
             Fire();
     }
 
+    public float getMouseX() {
+        Vector3 mousepos = Input.mousePosition;
+        mousepos = Camera.main.ScreenToWorldPoint(mousepos);
+        return mousepos.x;
+    }
+
+    public float getMouseY() {
+        Vector3 mousepos = Input.mousePosition;
+        mousepos = Camera.main.ScreenToWorldPoint(mousepos);
+        return mousepos.y;
+    }
+
 
 
     void Fire()
