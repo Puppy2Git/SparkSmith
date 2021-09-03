@@ -18,20 +18,21 @@ public class SideBox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Ground") {
+        if (col.gameObject.tag == "Ground")
+        {
             //To the right
-            if (col.gameObject.transform.position.x > transform.parent.parent.position.x) 
+            if (col.gameObject.transform.position.x > transform.parent.parent.position.x)
             {
-                move.moveState(2, true);
+                move.directionRestrict(2);
             }
             else if (col.gameObject.transform.position.x < transform.parent.parent.position.x)
             {
-                move.moveState(1, true);
+                move.directionRestrict(1);
             }
 
         }
@@ -40,8 +41,8 @@ public class SideBox : MonoBehaviour
     private void OnTriggerExit2D(Collider2D col)
     {
         if (col.gameObject.tag == "Ground")
-        { 
-            move.moveState(0, true);
+        {
+            move.directionRestrict(0);
         }
     }
 }

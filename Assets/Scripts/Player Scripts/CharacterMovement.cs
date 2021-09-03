@@ -69,9 +69,8 @@ public class CharacterMovement : MonoBehaviour
                 Jumps -= 1;
 
             }
-            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash) {
-                Debug.Log("Dashing");
-                moveState(0, false); //Disable movement
+            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash) {//Checks if the character is dashing or not and if pressing the dash key
+                moveState(false); //Disable movement
                 body.gravityScale = 0f; //Ignores Gravity
                 isDashing = true;
                 canDash = false;
@@ -83,7 +82,7 @@ public class CharacterMovement : MonoBehaviour
         
         //Dash movement
         Dash();//Handles Dashing
-        DashDelays();//Handles Dash Delay
+        DashDelays();//Handles Dash Delay calculations
     }
 
     
@@ -95,9 +94,13 @@ public class CharacterMovement : MonoBehaviour
 
 
     //This sets the canMove and the restrictedMove booleans
-    public void moveState(int dir, bool state) {
+    public void moveState(bool state) {
         
         canMove = state;
+    }
+
+    public void directionRestrict(int dir)
+    {
         restrictedMove = dir;
     }
 
@@ -117,7 +120,7 @@ public class CharacterMovement : MonoBehaviour
             if (dashTimer <= Time.time)
             {
                 body.gravityScale = 1f;
-                moveState(0, true);
+                moveState(true);
                 isDashing = false;
                 dashCooldown = Time.time + dashDelay;
             }

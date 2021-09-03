@@ -6,8 +6,10 @@ public class rotateScript : MonoBehaviour
 {
     public GameObject player;
     public float offset;
-    public float bulletSpeed = 10;
+    public float bulletSpeed = 25;
+    public float bulletOffset = 1.25f;
     public Rigidbody2D bullet;
+    public Transform Crosshair;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +32,7 @@ public class rotateScript : MonoBehaviour
 
     void Fire()
     {
-        Rigidbody2D bulletClone = (Rigidbody2D)Instantiate(bullet, transform.position, transform.rotation);
+        Rigidbody2D bulletClone = (Rigidbody2D)Instantiate(bullet, Crosshair.transform.position, transform.rotation);
         bulletClone.velocity = transform.up * bulletSpeed;
     }
 }
