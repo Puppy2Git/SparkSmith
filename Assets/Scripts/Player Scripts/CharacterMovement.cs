@@ -1,74 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//Written by Alexander Garcia
 public class CharacterMovement : MonoBehaviour
 {
-    private Rigidbody2D body;
-    private int Jumps;
-    public int maxJumps;
-    public float speed = 5f;
-    public float jumpForce;
-    public float dashForce;
-    private float dashTimer;
-    public float dashDelay;
-    public float dashDuration;
-    private float dashCooldown;
-    private bool canMove;
-    private bool canDash = true;
-    private bool isDashing;
-    private int restrictedMove = 0;
-    private float dashDir = 1f;
+    private Rigidbody2D body; //Grabs Rigidbody
+    private int Jumps; //jumps that the character has
+    public int maxJumps; //The maximum jumps they have
+    public float speed = 5f;//The speed at which they move
+    public float jumpForce;//The ammout of force applied while jumping
+    public float dashForce;//The ammount of force applied while dashing
+    private float dashTimer;//Internal dash timer
+    public float dashDelay;//The ammount of time before another dash can be used
+    public float dashDuration;//The length of the dash
+    private float dashCooldown;//Internal dash cooldown timer
+    private bool canMove;//Whether the player can move
+    private bool canDash;//If the player can dash
+    private bool isDashing;//Internal is the player dashing
+    private float dashDir;//The direction the dash is heading
+    private float gravity;//gravity nooooo
+    public float gravityConstant;//The inital gravity
     // Start is called before the first frame update
     void Awake()
     {
+        //Disabling and setting constants
         body = GetComponent<Rigidbody2D>();
         resetJumps();
         canMove = true;
         canDash = true;
+        gravity = gravityConstant;
+        body.gravityScale = 0f;
+        dashDir = 1f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         float Horizontal = Input.GetAxis("Horizontal");
 
         
-        //If and switch statement to determine if the character can move and if the movement is restricted.
+        //If and statement to determine if the character can move.
         if (canMove)
         {
-            switch (restrictedMove) {
-                //Normal
-                case 0:
-                    break;
-                //Can't move left
-                case 1:
-                    if (Horizontal < 0f)
-                    {
-                        Horizontal = 0;
-                    }
-                    break;
-                //Can't move right
-                case 2:
-                    if (Horizontal > 0f)
-                    {
-                        Horizontal = 0;
-                    }
-                    break;
-
-            }
-
+            
             //Changing Horizontal Velocity
             body.velocity = new Vector2(Horizontal * speed, body.velocity.y);
+
+
+            //If the character can jump, maybe move to own function?
             if (Input.GetKeyDown(KeyCode.Space) && Jumps > 0)
             {
                 //Changing Vertical Velocity
-                body.velocity = new Vector2(body.velocity.x, jumpForce);
-                Jumps -= 1;
-
+                body.velocity = new Vector2(body.velocity.x, Mathf.Sqrt(jumpForce * -3f * gravity));
+                Jumps -= 1;//Decressing jumps
             }
-
+            //Changing velocity by gravity.
+            body.velocity = new Vector2(body.velocity.x, body.velocity.y + (gravity * Time.deltaTime));
+            
+            
+            
             //Determines dash direction
             if (!isDashing)
             {
@@ -83,10 +73,10 @@ public class CharacterMovement : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && canDash) {//Checks if the character is dashing or not and if pressing the dash key
                 moveState(false); //Disable movement
-                body.gravityScale = 0f; //Ignores Gravity
+                gravity = 0f; //Ignores Gravity
                 isDashing = true;
                 canDash = false;
-                dashTimer = Time.time + dashDuration;
+                dashTimer = 0f;
                 
 
             }
@@ -112,14 +102,11 @@ public class CharacterMovement : MonoBehaviour
         canMove = state;
     }
 
-    public void directionRestrict(int dir)
-    {
-        restrictedMove = dir;
-    }
 
     //This handles Dashing it does not check the conditions for dashing
     public void DashDelays() {
-        if (dashCooldown <= Time.time && !isDashing && !canDash) {
+        dashCooldown += Time.deltaTime;
+        if (dashCooldown >= dashDelay) {
             canDash = true;
         }
         
@@ -128,14 +115,14 @@ public class CharacterMovement : MonoBehaviour
     public void Dash() {
         if (isDashing)
         {
-            
+            dashTimer += Time.deltaTime;
             body.velocity = new Vector2(dashForce * dashDir, 0);
-            if (dashTimer <= Time.time)
+            if (dashTimer >= dashDuration)
             {
-                body.gravityScale = 1f;
+                gravity = gravityConstant;
                 moveState(true);
                 isDashing = false;
-                dashCooldown = Time.time + dashDelay;
+                dashCooldown = 0f;
             }
 
         }

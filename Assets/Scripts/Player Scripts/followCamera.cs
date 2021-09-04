@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//Written by Alexander Garcia
 public class followCamera : MonoBehaviour
 {
 

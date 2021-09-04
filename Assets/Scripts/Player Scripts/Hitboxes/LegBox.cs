@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//Written by Alexander Garcia
 public class LegBox : MonoBehaviour
 {
-    private CharacterMovement player;
+    public CharacterMovement player;
     // Start is called before the first frame update
     void Awake()
     {
         //Gets player script object
-        player = transform.parent.parent.GetComponent<CharacterMovement>();
-        Physics2D.IgnoreCollision(transform.parent.parent.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        
+        //Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());
     }
 
     // Update is called once per frame
