@@ -115,14 +115,17 @@ public class CharacterMovement : MonoBehaviour
     public void Dash() {
         if (isDashing)
         {
+            canDash = false;
             dashTimer += Time.deltaTime;
             body.velocity = new Vector2(dashForce * dashDir, 0);
             if (dashTimer >= dashDuration)
             {
+                dashCooldown = 0f;
                 gravity = gravityConstant;
                 moveState(true);
+
                 isDashing = false;
-                dashCooldown = 0f;
+                
             }
 
         }
