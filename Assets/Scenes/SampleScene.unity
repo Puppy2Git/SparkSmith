@@ -7080,6 +7080,7 @@ GameObject:
   - component: {fileID: 1978904552}
   - component: {fileID: 1978904551}
   - component: {fileID: 1978904555}
+  - component: {fileID: 1978904556}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -7120,13 +7121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fec95bc6c6b7b23408fa2f6638caf412, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxJumps: 3
-  speed: 5
-  jumpForce: 1.5
-  dashForce: 25
-  dashDelay: 2
-  dashDuration: 0.25
-  gravityConstant: -20
 --- !u!212 &1978904553
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7209,3 +7203,16 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 0.99999994}
   m_Direction: 0
+--- !u!114 &1978904556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978904550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4f6ae26dc3f4c79805bb497def8264, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimer: {fileID: 1816390888}

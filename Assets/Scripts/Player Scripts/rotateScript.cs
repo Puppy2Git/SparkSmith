@@ -28,17 +28,16 @@ public class rotateScript : MonoBehaviour
         transform.up = direction;
         
         //If the character fires (Should be moved to a character attack script)
-        if (Input.GetButtonDown("Fire1"))
-            Fire();
+        
     }
 
-    public float getMouseX() {
+    private float getMouseX() {
         Vector3 mousepos = Input.mousePosition;
         mousepos = Camera.main.ScreenToWorldPoint(mousepos);
         return mousepos.x;
     }
 
-    public float getMouseY() {
+    private float getMouseY() {
         Vector3 mousepos = Input.mousePosition;
         mousepos = Camera.main.ScreenToWorldPoint(mousepos);
         return mousepos.y;
@@ -46,7 +45,7 @@ public class rotateScript : MonoBehaviour
 
 
 
-    void Fire()
+    public void Fire()
     {
         //Generates a new bullet
         BulletScript bulletClone = (BulletScript)Instantiate(bullet, Crosshair.transform.position, transform.rotation);
