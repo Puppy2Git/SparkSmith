@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private CharacterMovement movement;
     private Transform location;
     public rotateScript aimer;
+    private WeaponBase currentGun;
+    private bool auto = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,9 +36,22 @@ public class PlayerController : MonoBehaviour
         }
 
         //Fire le gun
-        if (Input.GetButtonDown("Fire1"))
-        {
-            aimer.Fire();
+        if (auto == false && currentGun != null) {
+            if (Input.GetButtonDown("Fire1"))
+            {
+                currentGun.OnFire();
+            }
         }
+        else if (auto == true && currentGun != null) {
+            if (Input.GetButton("Fire1"))
+            {
+                currentGun.OnFire();
+            }
+        }
+    }
+
+    public void setGun(WeaponBase newGun, bool isauto) {
+        currentGun = newGun;
+        auto = isauto;
     }
 }
