@@ -51,6 +51,9 @@ public class PlayerController : MonoBehaviour
     }
 
     public void setGun(WeaponBase newGun, bool isauto) {
+        if (currentGun != null) {
+            currentGun.Drop();
+        }
         currentGun = newGun;
         auto = isauto;
     }

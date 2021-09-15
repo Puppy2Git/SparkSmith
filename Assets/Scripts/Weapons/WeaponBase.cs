@@ -34,6 +34,10 @@ public class WeaponBase : MonoBehaviour
             }
         }
     }
+    public void Drop() {
+        gameObject.GetComponent<SpriteRenderer>().enabled = true;//Disable Renderer
+        gameObject.GetComponent<BoxCollider2D>().enabled = true;//
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

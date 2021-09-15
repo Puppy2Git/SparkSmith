@@ -7,7 +7,7 @@ public class rotateScript : MonoBehaviour
     public GameObject player; //For player position
     public float offset; //offset for debugging
     public float bulletSpeed = 25; // Setting bullet speed
-    public BulletScript bullet; //Grabbing bullet object
+    
     public Transform Crosshair; // Crosshair location
     // Start is called before the first frame update
     void Start()
@@ -48,13 +48,19 @@ public class rotateScript : MonoBehaviour
     public void Fire(float randomspread)
     {
         //Generates a new bullet
-        BulletScript bulletClone = (BulletScript)Instantiate(bullet, Crosshair.transform.position, transform.rotation);
-        //Sets it's direction and speed
-        bulletClone.transform.Rotate(0f, 0f, Random.Range(-randomspread, randomspread));
-        bulletClone.GetComponent<Rigidbody2D>().velocity = bulletClone.transform.up * bulletSpeed;
         
+        GameObject bulletClone = Object_Pool.SharedInstance.GetPooledObject();
+        if (bulletClone != null)
+        {
+            bulletClone.transform.position = Crosshair.transform.position;
+            bulletClone.transform.rotation = transform.rotation;
+            bulletClone.SetActive(true);
+            //Sets it's direction and speed
+            bulletClone.transform.Rotate(0f, 0f, Random.Range(-randomspread, randomspread));
+            bulletClone.GetComponent<Rigidbody2D>().velocity = bulletClone.transform.up * bulletSpeed;
+            
+        }
         //Tells it is is a lie
-        bulletClone.dupe = true;
     }
 }
 
