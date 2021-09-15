@@ -6855,8 +6855,8 @@ MonoBehaviour:
   aimer: {fileID: 1816390888}
   auto: 1
   fireRate: 0.15
-  bulletSpread: 0
-  bulletShot: 1
+  bulletSpread: 45
+  bulletShot: 3
 --- !u!212 &663405901
 SpriteRenderer:
   m_ObjectHideFlags: 0

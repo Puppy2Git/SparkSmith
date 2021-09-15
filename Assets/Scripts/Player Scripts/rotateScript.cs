@@ -51,7 +51,7 @@ public class rotateScript : MonoBehaviour
         BulletScript bulletClone = (BulletScript)Instantiate(bullet, Crosshair.transform.position, transform.rotation);
         //Sets it's direction and speed
         bulletClone.transform.Rotate(0f, 0f, Random.Range(-randomspread, randomspread));
-        bulletClone.GetComponent<Rigidbody2D>().velocity = transform.up * bulletSpeed;
+        bulletClone.GetComponent<Rigidbody2D>().velocity = bulletClone.transform.up * bulletSpeed;
         
         //Tells it is is a lie
         bulletClone.dupe = true;
