@@ -55,6 +55,9 @@ public class PlayerController : MonoBehaviour
             currentGun.Drop();
         }
         currentGun = newGun;
+        newGun.transform.rotation = aimer.transform.rotation;
+        newGun.transform.parent = aimer.gameObject.transform;
+        newGun.transform.position = aimer.Crosshair.position;
         auto = isauto;
     }
 }
