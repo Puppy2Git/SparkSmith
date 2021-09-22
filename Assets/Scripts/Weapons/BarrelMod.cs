@@ -4,18 +4,23 @@ using UnityEngine;
 
 
 //Barrels increase speed and range
-public class Barrel : ModWeaponBase
+public class BarrelMod : ModWeaponBase
 {
+
     public int bulletShot;//Bullets per shot
-    
+
     // Start is called before the first frame update
-    void Awake()
+    private void Start()
     {
         type = PartType.Barrel;
     }
 
+    
     // Update is called once per frame
-    public new int Attribute1() {
+    public new int Attribute1()
+    {
         return bulletShot;
     }
+
+
 }

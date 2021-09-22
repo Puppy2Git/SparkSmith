@@ -57,7 +57,7 @@ public class WeaponBase : MonoBehaviour
         switch (gunpart.type)
         {
             case PartType.Barrel:
-                bulletShot = gunpart.Attribute1();
+                //bulletShot = gunpart.Attribute1();
                 break;
             case PartType.Muzzle:
                 //dropTimer = 0f;
@@ -75,6 +75,7 @@ public class WeaponBase : MonoBehaviour
                 if (attachments[i].type == gunpart.type)//If they are the same
                 {//If the types are the same
                     isEmpty = false;
+                    attachments[i].Drop();
                     attachments[i] = gunpart;//Attach new gun
                                              //Run drop for old gun type
                 }

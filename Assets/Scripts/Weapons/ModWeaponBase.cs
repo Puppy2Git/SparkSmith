@@ -9,24 +9,31 @@ public enum PartType
     Sight,//Dictates accuracy/bullet spread
     Muzzle,//Speed and sound
 }
-public abstract class ModWeaponBase : MonoBehaviour
+public class ModWeaponBase : MonoBehaviour
 {
 
     public PartType type;
-    public GameObject prefab;
     public float DropTimer;
     public float xOff;
     public float yOff;
+    public float attribute1;
 
+    public void Awake()
+    {
+    
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Gun") {
             collision.gameObject.GetComponent<WeaponBase>().Attach(this);
-            collision.gameObject.GetComponent<Collider2D>().enabled = false;
+            gameObject.GetComponent<Collider2D>().enabled = false;
         }
     }
-    public int Attribute1() {
-        return 0;
+    public float Attribute1() {
+        return attribute1;
+    }
+    public void Drop() {
+        gameObject.GetComponent<Collider2D>().enabled = true;
     }
 }
