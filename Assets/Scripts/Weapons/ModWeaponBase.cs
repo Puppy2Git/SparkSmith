@@ -17,16 +17,36 @@ public class ModWeaponBase : MonoBehaviour
     public float xOff;
     public float yOff;
     public float attribute1;
+    private float dropDelay = 3f;
+    private float dropTimerDelay = 0f;
+    private bool canPick;
 
-    public void Awake()
+    private void Awake()
     {
-    
+        Debug.Log("I'm alive");
+        canPick = true;
+        dropTimerDelay = 0f;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Update()
     {
-        if (collision.gameObject.tag == "Gun") {
-            collision.gameObject.GetComponent<WeaponBase>().Attach(this);
+        if (dropTimerDelay >= dropDelay && !canPick) {
+            canPick = true;
+        }
+        else
+        {
+            dropTimerDelay += Time.deltaTime;
+        }
+    }
+
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if ((collision.gameObject.tag == "Player") && (canPick))
+        {//If it is touching a gun and it can be picked up
+            Debug.Log("Been touched");
+            canPick = false;
+            collision.gameObject.GetComponent<PlayerController>().getGun().Attach(this);
             gameObject.GetComponent<Collider2D>().enabled = false;
         }
     }
@@ -35,5 +55,6 @@ public class ModWeaponBase : MonoBehaviour
     }
     public void Drop() {
         gameObject.GetComponent<Collider2D>().enabled = true;
+        dropTimerDelay = 0f;//Reset timer
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class WeaponBase : MonoBehaviour
 {
 
@@ -14,13 +14,20 @@ public class WeaponBase : MonoBehaviour
     private bool canPick;
     public float dropDelay;
     private float fireTimer;//Fire delay
-    public List<ModWeaponBase> attachments;
+    //public List<ModWeaponBase> attachments;
+    private ModWeaponBase barrel;
+    private ModWeaponBase payload;
+    private ModWeaponBase sight;
+    private ModWeaponBase muzzle;
+    private bool holding;
+
     // Start is called before the first frame update
     void Start()
     {
         gameObject.tag = "Gun";
         fireTimer = fireRate;
         canPick = true;
+        holding = false;
     }
 
     // Update is called once per frame
@@ -46,62 +53,74 @@ public class WeaponBase : MonoBehaviour
     }
     public void Drop() {
         gameObject.GetComponent<SpriteRenderer>().enabled = true;//Disable Renderer
-        gameObject.GetComponent<BoxCollider2D>().enabled = true;//
+        //gameObject.GetComponent<BoxCollider2D>().enabled = true;//
         transform.parent = null;
         dropTimer = 0f;
         canPick = false;
+        holding = false;
     }
     //Attaches a Gun Part to the gun base/Stock
     public void Attach(ModWeaponBase gunpart)
     {
+        Debug.Log("Attaching");
         switch (gunpart.type)
         {
             case PartType.Barrel:
-                //bulletShot = gunpart.Attribute1();
+                Debug.Log("It's a barrel!");
+                if (barrel != null)
+                {//If barrel does exists
+                    barrel.Drop();//Drop current part
+                    
+                }
+                Debug.Log("Setting barrel in");
+                barrel = gunpart;//Attach new part to var
+                
                 break;
             case PartType.Muzzle:
-                //dropTimer = 0f;
+                if (muzzle != null)
+                {//If barrel does exists
+                    muzzle.Drop();//Drop current part
+
+                }
+                muzzle = gunpart;//Attach new part to var
                 break;
             case PartType.Payload:
-                //dropTimer = 0f;
+                if (payload != null)
+                {//If barrel does exists
+                    payload.Drop();//Drop current part
+
+                }
+                payload = gunpart;//Attach new part to var
                 break;
             case PartType.Sight:
-                //dropTimer = 0f;
+                if (sight != null)
+                {//If barrel does exists
+                    sight.Drop();//Drop current part
+
+                }
+                sight = gunpart;//Attach new part to var
                 break;
         }
-        bool isEmpty = true;//If there is nothing
-        for (int i = 0; i < attachments.Count; i++) {//Checks through all gun parts
-            if (attachments[i] != null) {//If the part exists
-                if (attachments[i].type == gunpart.type)//If they are the same
-                {//If the types are the same
-                    isEmpty = false;
-                    attachments[i].Drop();
-                    attachments[i] = gunpart;//Attach new gun
-                                             //Run drop for old gun type
-                }
-
-            }
-            if (isEmpty) {
-                attachments.Add(gunpart);
-                //Sets Parent, Rotation, Position + Offset
-                gunpart.transform.parent = gameObject.transform;
-                gunpart.transform.rotation = transform.rotation;
-                gunpart.transform.position = transform.position + (gunpart.xOff * transform.up) + (gunpart.yOff * transform.right);
-
-            }
-
-        }
+        attachPartToGameworld(gunpart);//Attach to gameworld
         
         
     }
 
+    private void attachPartToGameworld(ModWeaponBase part) {
+        Debug.Log("Here comes the gun!");
+        part.transform.parent = gameObject.transform;//Sets the part's parrent
+        part.transform.rotation = transform.rotation;//Sets the part's rotation
+        part.transform.position = transform.position + (part.xOff * transform.up) + (part.yOff * transform.right);//Sets the rotation with an offset for connecting the parts
+
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && canPick) {//If they are the player
-            
+        if (collision.gameObject.tag == "Player" && canPick && !holding) {//If they are the player
+            holding = true;
             collision.gameObject.GetComponent<PlayerController>().setGun(this, auto);//Sets this as the new gun
             //gameObject.GetComponent<SpriteRenderer>().enabled = false;//Disable Renderer
-            gameObject.GetComponent<BoxCollider2D>().enabled = false;//
+            
         }
     }
 }

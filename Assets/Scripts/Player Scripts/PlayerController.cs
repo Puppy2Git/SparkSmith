@@ -60,4 +60,7 @@ public class PlayerController : MonoBehaviour
         newGun.transform.position = aimer.Crosshair.position;
         auto = isauto;
     }
+    public WeaponBase getGun() {
+        return currentGun;
+    }
 }
