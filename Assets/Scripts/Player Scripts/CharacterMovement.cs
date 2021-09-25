@@ -10,11 +10,11 @@ public class CharacterMovement : MonoBehaviour
     //Handles Jumps
     private int Jumps; //jumps that the character has
     private int maxJumps = 3; //The maximum jumps they have
-    private float jumpForce = 1.5f;//The ammout of force applied while jumping
+    public float jumpForce = 1.5f;//The ammout of force applied while jumping
 
     
     //Handles Dash
-    private float dashForce = 25f;//The ammount of force applied while dashing
+    public float dashForce = 25f;//The ammount of force applied while dashing
     private float dashTimer;//Internal dash timer
     private float dashDelay = 2f;//The ammount of time before another dash can be used
     private float dashDuration = 0.25f;//The length of the dash
@@ -22,13 +22,12 @@ public class CharacterMovement : MonoBehaviour
     private bool canDash;//If the player can dash
     private bool isDashing;//Internal is the player dashing
 
-
     //Handles Movement
-    private float speed = 5f;//The speed at which they move
+    public float speed = 5f;//The speed at which they move
     private bool canMove;//Whether the player can move
     private float dashDir;//The direction the dash is heading
     private float gravity;//gravity nooooo
-    private float gravityConstant = -20f;//The inital gravity
+    public float gravityConstant = -20f;//The inital gravity
     private float Horizontal;   
     //Called by playerController
     public void Dash() {
@@ -56,7 +55,7 @@ public class CharacterMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         movement();//handles movement
         DashMovement();//Handles Dashing
@@ -73,13 +72,24 @@ public class CharacterMovement : MonoBehaviour
         {
 
             //Changing Horizontal Velocity
-            body.velocity = new Vector2(Horizontal * speed, body.velocity.y);
+
 
 
             //If the character can jump, maybe move to own function?
 
             //Changing velocity by gravity.
-            body.velocity = new Vector2(body.velocity.x, body.velocity.y + (gravity * Time.deltaTime));
+            //if (!isground)
+            //{
+            
+            //if (!isground)
+            //{
+                body.velocity = new Vector2(body.velocity.x, body.velocity.y + (gravity * Time.deltaTime));
+
+            //}
+            
+                body.velocity = new Vector2(Horizontal * speed * Time.deltaTime, body.velocity.y);
+            
+            //}
 
 
 
@@ -102,13 +112,15 @@ public class CharacterMovement : MonoBehaviour
 
     public void Jump() {
         if (Jumps > 0) {
-            body.velocity = new Vector2(body.velocity.x, Mathf.Sqrt(jumpForce * -3f * gravity));
+            //isground = false;
+            body.velocity = new Vector2(body.velocity.x, Mathf.Sqrt(jumpForce * -3f * gravity * Time.deltaTime));
             Jumps -= 1;//Decressing jumps
         }
     }
 
     //Resets the Jumps
     public void resetJumps() {
+        //isground = true;
         Jumps = maxJumps;
     }
 
@@ -134,7 +146,7 @@ public class CharacterMovement : MonoBehaviour
         {
             canDash = false;
             dashTimer += Time.deltaTime;
-            body.velocity = new Vector2(dashForce * dashDir, 0);
+            body.velocity = new Vector2(dashForce * dashDir * Time.deltaTime, 0);
             if (dashTimer >= dashDuration)
             {
                 dashCooldown = 0f;
@@ -146,5 +158,9 @@ public class CharacterMovement : MonoBehaviour
             }
 
         }
+    
     }
+
+  
+
 }

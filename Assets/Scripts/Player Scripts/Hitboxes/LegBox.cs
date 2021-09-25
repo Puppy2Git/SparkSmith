@@ -22,11 +22,13 @@ public class LegBox : MonoBehaviour
     //When touching ground
     private void OnTriggerEnter2D(Collider2D col)
     {
-        {
+        
             if (col.gameObject.tag == "Ground")
             {
                 player.resetJumps();
+                //player.GroundUpdate(true);
             }
-        }
+        
     }
+    
 }

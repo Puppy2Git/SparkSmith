@@ -23,7 +23,7 @@ public class ModWeaponBase : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("I'm alive");
+        
         canPick = true;
         dropTimerDelay = 0f;
     }
@@ -44,11 +44,14 @@ public class ModWeaponBase : MonoBehaviour
     {
         if ((collision.gameObject.tag == "Player") && (canPick))
         {//If it is touching a gun and it can be picked up
-            Debug.Log("Been touched");
-            canPick = false;
-            collision.gameObject.GetComponent<PlayerController>().getGun().Attach(this);
-            gameObject.GetComponent<Collider2D>().enabled = false;
-        }
+            
+            if (collision.gameObject.GetComponent<PlayerController>().getGun() != null)
+            {
+                canPick = false;
+                collision.gameObject.GetComponent<PlayerController>().getGun().Attach(this);
+                gameObject.GetComponent<Collider2D>().enabled = false;
+            }
+            }
     }
     public float Attribute1() {
         return attribute1;

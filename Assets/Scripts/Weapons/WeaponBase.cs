@@ -62,17 +62,17 @@ public class WeaponBase : MonoBehaviour
     //Attaches a Gun Part to the gun base/Stock
     public void Attach(ModWeaponBase gunpart)
     {
-        Debug.Log("Attaching");
+        
         switch (gunpart.type)
         {
             case PartType.Barrel:
-                Debug.Log("It's a barrel!");
+                
                 if (barrel != null)
                 {//If barrel does exists
                     barrel.Drop();//Drop current part
                     
                 }
-                Debug.Log("Setting barrel in");
+                
                 barrel = gunpart;//Attach new part to var
                 
                 break;
@@ -107,7 +107,7 @@ public class WeaponBase : MonoBehaviour
     }
 
     private void attachPartToGameworld(ModWeaponBase part) {
-        Debug.Log("Here comes the gun!");
+        
         part.transform.parent = gameObject.transform;//Sets the part's parrent
         part.transform.rotation = transform.rotation;//Sets the part's rotation
         part.transform.position = transform.position + (part.xOff * transform.up) + (part.yOff * transform.right);//Sets the rotation with an offset for connecting the parts
