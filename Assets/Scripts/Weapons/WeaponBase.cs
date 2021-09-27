@@ -12,52 +12,98 @@ public class WeaponBase : MonoBehaviour
     public int bulletShot = 1;
     private float dropTimer;
     private bool canPick;
-    public float dropDelay;
-    private float fireTimer;//Fire delay
+    public float dropDelay = 2f;
+    private float fireTimer;
+    private float gravity = -20;
+    private float hoverIntencity = 0.25f;
+    private double hoverTimer;
+    private double hoverSpeed = 2.5f;
+    private float hoverInital;
     //public List<ModWeaponBase> attachments;
     private ModWeaponBase barrel;
     private ModWeaponBase payload;
     private ModWeaponBase sight;
     private ModWeaponBase muzzle;
     private bool holding;
-
+    private bool ground;
+    private Rigidbody2D body;
     // Start is called before the first frame update
     void Start()
     {
+        body = gameObject.GetComponent<Rigidbody2D>();
         gameObject.tag = "Gun";
         fireTimer = fireRate;
+        ground = false;
         canPick = true;
         holding = false;
     }
 
     // Update is called once per frame
+    //Handling picking up
     void Update()
     {
+          
         fireTimer += Time.deltaTime;
-        if (canPick == false)
+        if (canPick == false && ground)
         {
             dropTimer += Time.deltaTime;
         }
-        if (dropTimer >= dropDelay) {
+        if (dropTimer >= dropDelay && ground) {
             canPick = true;
         }
     }
 
+    //handling collision
+    private void FixedUpdate()
+    {
+        
+            if (!ground && !holding)
+            {
+                body.velocity = new Vector3(body.velocity.x, body.velocity.y + gravity * Time.deltaTime);
+
+            }
+            if (ground && !holding)
+            {
+
+                body.position = new Vector3(body.position.x, ((float)Math.Cos(hoverTimer * hoverSpeed) * -hoverIntencity) + hoverInital + hoverIntencity);
+                hoverTimer += (double)Time.deltaTime;
+
+            }
+            //Catch
+
+        
+    }
+
+
     public void OnFire() {//Called given the input of PlayerController
         if (fireTimer >= fireRate) {//If any delay
             fireTimer = 0;
-            for (int i = 0; i < bulletShot; i++) {
-                aimer.Fire(bulletSpread);
+            if (barrel != null)//If there is a barrel attached
+            {
+                
+                for (int i = 0; i <barrel.Attribute2(); i++)
+                {
+                    aimer.Fire(bulletSpread);
+                }
             }
+            else {
+                for (int i = 0; i < bulletShot; i++)
+                {
+                    aimer.Fire(bulletSpread);
+                }
+            }
+            
         }
     }
     public void Drop() {
-        gameObject.GetComponent<SpriteRenderer>().enabled = true;//Disable Renderer
-        //gameObject.GetComponent<BoxCollider2D>().enabled = true;//
-        transform.parent = null;
         dropTimer = 0f;
-        canPick = false;
         holding = false;
+        
+        hoverTimer = 0f;
+        transform.parent = null;
+        transform.eulerAngles = new Vector3(0, 0, -90);//Rotate by -90 or right
+        ground = false;
+        
     }
     //Attaches a Gun Part to the gun base/Stock
     public void Attach(ModWeaponBase gunpart)
@@ -116,11 +162,19 @@ public class WeaponBase : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && canPick && !holding) {//If they are the player
+        if (collision.gameObject.tag == "Player" && canPick && !holding)
+        {//If they are the player
             holding = true;
+            canPick = false;
+            ground = false;
             collision.gameObject.GetComponent<PlayerController>().setGun(this, auto);//Sets this as the new gun
-            //gameObject.GetComponent<SpriteRenderer>().enabled = false;//Disable Renderer
-            
+                                                                                     //gameObject.GetComponent<SpriteRenderer>().enabled = false;//Disable Renderer
+
+        }
+        else if (collision.gameObject.tag == "Ground" && !ground && !holding) {
+            ground = true;
+            hoverInital = body.position.y;
+            body.velocity = new Vector3(body.velocity.x, 0);
         }
     }
 }

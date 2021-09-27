@@ -15,12 +15,14 @@ public class BarrelMod : ModWeaponBase
         type = PartType.Barrel;
     }
 
-    
+
     // Update is called once per frame
-    public new int Attribute1()
+    public override float Attribute1() {
+        return 0f;
+    }
+    public override int Attribute2()
     {
         return bulletShot;
     }
-
 
 }

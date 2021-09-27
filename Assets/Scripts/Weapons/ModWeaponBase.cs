@@ -9,14 +9,13 @@ public enum PartType
     Sight,//Dictates accuracy/bullet spread
     Muzzle,//Speed and sound
 }
-public class ModWeaponBase : MonoBehaviour
+public abstract class ModWeaponBase : MonoBehaviour
 {
 
     public PartType type;
     public float DropTimer;
     public float xOff;
     public float yOff;
-    public float attribute1;
     private float dropDelay = 3f;
     private float dropTimerDelay = 0f;
     private bool canPick;
@@ -53,9 +52,9 @@ public class ModWeaponBase : MonoBehaviour
             }
             }
     }
-    public float Attribute1() {
-        return attribute1;
-    }
+    public abstract float Attribute1();
+    public abstract int Attribute2();
+
     public void Drop() {
         gameObject.GetComponent<Collider2D>().enabled = true;
         dropTimerDelay = 0f;//Reset timer
