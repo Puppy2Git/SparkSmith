@@ -10,8 +10,8 @@ public class CharacterMovement : MonoBehaviour
     //Handles Jumps
     private int Jumps; //jumps that the character has
     private int maxJumps = 3; //The maximum jumps they have
-    private float jumpForce = 150f;//The ammout of force applied while jumping
-
+    private float jumpForce = 50f;//The ammout of force applied while jumping
+    private bool wantToJump = false;
     
     //Handles Dash
     private float dashForce = 750f;//The ammount of force applied while dashing
@@ -29,6 +29,7 @@ public class CharacterMovement : MonoBehaviour
     private float gravity;//gravity nooooo
     private float gravityConstant = -20f;//The inital gravity
     private float Horizontal;   
+    
     //Called by playerController
     public void Dash() {
         if (!isDashing && canDash)
@@ -60,6 +61,15 @@ public class CharacterMovement : MonoBehaviour
         movement();//handles movement
         DashMovement();//Handles Dashing
         DashDelays();//Handles Dash Delay calculations
+        checkJump();
+    }
+    public void checkJump()
+    {
+        if (wantToJump) {
+            wantToJump = false;
+            body.velocity = new Vector2(body.velocity.x, Mathf.Sqrt(jumpForce * -3f * gravity * Time.deltaTime));
+            Jumps -= 1;//Decressing jumps
+        }
     }
 
     public void setHorizontal(float hori) {
@@ -113,8 +123,7 @@ public class CharacterMovement : MonoBehaviour
     public void Jump() {
         if (Jumps > 0) {
             //isground = false;
-            body.velocity = new Vector2(body.velocity.x, Mathf.Sqrt(jumpForce * -3f * gravity * Time.deltaTime));
-            Jumps -= 1;//Decressing jumps
+            wantToJump = true;
         }
     }
 

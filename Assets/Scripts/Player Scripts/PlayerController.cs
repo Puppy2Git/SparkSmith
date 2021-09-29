@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private Transform location;
     public rotateScript aimer;
     private WeaponBase currentGun;
+    public InteractionSphere inter;
     private bool auto = false;
     // Start is called before the first frame update
     void Start()
@@ -48,10 +49,30 @@ public class PlayerController : MonoBehaviour
                 currentGun.OnFire();
             }
         }
+        else if (Input.GetKeyDown(KeyCode.E)) {
+            attemptPickup();
+        }
+    }
+
+    private void attemptPickup() {
+
+        GameObject temp = inter.getPriority();
+        if (temp != null)
+        {
+            if (temp.tag == "Gun")
+            {
+                if (temp.GetComponent<WeaponBase>().canPickup())
+                {
+                    temp.GetComponent<WeaponBase>().Onpickup();
+                    setGun(temp.GetComponent<WeaponBase>(), false);
+                }
+            }
+        }
     }
 
     public void setGun(WeaponBase newGun, bool isauto) {
         if (currentGun != null) {
+            Debug.Log("DROP ME!");
             currentGun.Drop();
         }
         currentGun = newGun;

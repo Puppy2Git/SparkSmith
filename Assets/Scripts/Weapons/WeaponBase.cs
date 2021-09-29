@@ -160,18 +160,20 @@ public class WeaponBase : MonoBehaviour
 
     }
 
+    public bool canPickup() {
+        return (canPick && !holding);
+    }
+
+    public void Onpickup() {
+        holding = true;
+        canPick = false;
+        ground = false;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && canPick && !holding)
-        {//If they are the player
-            holding = true;
-            canPick = false;
-            ground = false;
-            collision.gameObject.GetComponent<PlayerController>().setGun(this, auto);//Sets this as the new gun
-                                                                                     //gameObject.GetComponent<SpriteRenderer>().enabled = false;//Disable Renderer
-
-        }
-        else if (collision.gameObject.tag == "Ground" && !ground && !holding) {
+        
+        if (collision.gameObject.tag == "Ground" && !ground && !holding) {
             ground = true;
             hoverInital = body.position.y;
             body.velocity = new Vector3(body.velocity.x, 0);
