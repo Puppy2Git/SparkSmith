@@ -19,6 +19,9 @@ public class WeaponBase : MonoBehaviour
     private double hoverTimer;
     private double hoverSpeed = 2.5f;
     private float hoverInital;
+    public Vector2 barrelOffset = new Vector2();
+    public Vector2 sightOffset = new Vector2();
+    
     //public List<ModWeaponBase> attachments;
     private ModWeaponBase barrel;
     private ModWeaponBase payload;
@@ -146,32 +149,45 @@ public class WeaponBase : MonoBehaviour
                 sight = gunpart;//Attach new part to var
                 break;
         }
+        gunpart.attached();
         attachPartToGameworld(gunpart);//Attach to gameworld
         
         
     }
-
+    //Runned when attaching a part to the gun its self
     private void attachPartToGameworld(ModWeaponBase part) {
         
         part.transform.parent = gameObject.transform;//Sets the part's parrent
         part.transform.rotation = transform.rotation;//Sets the part's rotation
-        part.transform.position = transform.position + (part.xOff * transform.up) + (part.yOff * transform.right);//Sets the rotation with an offset for connecting the parts
+        part.transform.position = transform.position + (barrelOffset.x * transform.up) + (barrelOffset.y * transform.right);//Sets the rotation with an offset for connecting the parts
 
     }
-
+    //Returns the length of the gun plus the length of the barrel
+    public float getTotalLength() {
+        if (barrel != null)
+        {
+            return barrelOffset.x + barrel.extraOffset;
+        }
+        else {
+            return barrelOffset.x;
+        }
+    }
+    //returns if it can be picked up
     public bool canPickup() {
         return (canPick && !holding);
     }
-
+    //When it is picked up
     public void Onpickup() {
         holding = true;
         canPick = false;
         ground = false;
     }
+    //Gets the auto stat from it
     public bool returnAuto() {
         return auto;
     }
 
+    //If collision with the ground
     private void OnTriggerEnter2D(Collider2D collision)
     {
         

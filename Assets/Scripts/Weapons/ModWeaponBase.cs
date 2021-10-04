@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,19 +15,30 @@ public abstract class ModWeaponBase : MonoBehaviour
 
     public PartType type;
     public float DropTimer;
-    public float xOff;
-    public float yOff;
     private float dropDelay = 3f;
     private float dropTimerDelay = 0f;
     private bool canPick;
+    public float extraOffset;
     private Rigidbody2D body;
+    private double hoverTimer;
+    private float hoverSpeed = 2.5f;
+    private float gravity = -20f;
+    private float hoverIntencity = 0.25f;
+    private float hoverInital;
+    private bool ground;
+    private bool holding;
+
+    //Wakee Wakee
     private void Awake()
     {
         body = gameObject.GetComponent<Rigidbody2D>();  
         canPick = true;
         dropTimerDelay = 0f;
+        ground = false;
+        holding = false;
     }
 
+    //Update Loop
     private void Update()
     {
         if (dropTimerDelay >= dropDelay && !canPick) {
@@ -38,27 +50,57 @@ public abstract class ModWeaponBase : MonoBehaviour
         }
     }
 
-    
+    //FixedUpdate Loop for gravity
+    private void FixedUpdate()
+    {
+        //If they are in the air and are not being held
+        if (!ground && !holding)
+        {
+            body.velocity = new Vector3(body.velocity.x, body.velocity.y + gravity * Time.deltaTime);
+
+        }
+        //If they are on the ground
+        if (ground && !holding)
+        {
+
+            body.position = new Vector3(body.position.x, ((float)Math.Cos(hoverTimer * hoverSpeed) * -hoverIntencity) + hoverInital + hoverIntencity);
+            hoverTimer += (double)Time.deltaTime;
+
+        }
+        
+
+    }
+    //Called when attached to a gun
+    public void attached() {
+        holding = true;
+        ground = true;
+        gameObject.GetComponent<Collider2D>().enabled = false;
+    }
+
+    //If they collide with the ground
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        /*
-        if ((collision.gameObject.tag == "Player") && (canPick))
-        {//If it is touching a gun and it can be picked up
-
-            if (collision.gameObject.tag == "Ground" && !ground && !holding)
-            {
-                ground = true;
-                hoverInital = body.position.y;
-                body.velocity = new Vector3(body.velocity.x, 0);
-            }
-        */
-        
+        if (collision.gameObject.tag == "Ground" && !ground && !holding)
+        {
+            ground = true;
+            hoverInital = body.position.y;
+            body.velocity = new Vector3(body.velocity.x, 0);
+        }
     }
+
+    //To be changed by other classes
     public abstract float Attribute1();
     public abstract int Attribute2();
 
+
+    //When dropped
     public void Drop() {
         gameObject.GetComponent<Collider2D>().enabled = true;
         dropTimerDelay = 0f;//Reset timer
+        holding = false;
+        hoverTimer = 0f;
+        transform.parent = null;
+        transform.eulerAngles = new Vector3(0, 0, -90);//Rotate by -90 or right
+        ground = false;
     }
 }

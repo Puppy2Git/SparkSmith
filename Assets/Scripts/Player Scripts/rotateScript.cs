@@ -30,19 +30,12 @@ public class rotateScript : MonoBehaviour
         //If the character fires (Should be moved to a character attack script)
         
     }
+    //Handles the crosshair's position
+    public void updateCrosshairLength(float distance) {
+        Crosshair.transform.position = transform.position + (Crosshair.transform.up * distance);
 
-    private float getMouseX() {
-        Vector3 mousepos = Input.mousePosition;
-        mousepos = Camera.main.ScreenToWorldPoint(mousepos);
-        return mousepos.x;
     }
-
-    private float getMouseY() {
-        Vector3 mousepos = Input.mousePosition;
-        mousepos = Camera.main.ScreenToWorldPoint(mousepos);
-        return mousepos.y;
-    }
-
+    
 
 
     public void Fire(float randomspread)
@@ -60,7 +53,7 @@ public class rotateScript : MonoBehaviour
             bulletClone.GetComponent<Rigidbody2D>().velocity = bulletClone.transform.up * bulletSpeed;
             
         }
-        //Tells it is is a lie
+        
     }
 }
 
