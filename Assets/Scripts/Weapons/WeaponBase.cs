@@ -98,7 +98,6 @@ public class WeaponBase : MonoBehaviour
     public void Drop() {
         dropTimer = 0f;
         holding = false;
-        
         hoverTimer = 0f;
         transform.parent = null;
         transform.eulerAngles = new Vector3(0, 0, -90);//Rotate by -90 or right
@@ -168,6 +167,9 @@ public class WeaponBase : MonoBehaviour
         holding = true;
         canPick = false;
         ground = false;
+    }
+    public bool returnAuto() {
+        return auto;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -3341,6 +3341,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &168933320 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4280420322197060171, guid: 0ebda6edae991404ea419be2e863ba31, type: 3}
+  m_PrefabInstance: {fileID: 332461926}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &168933321
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168933320}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &216203953
 GameObject:
   m_ObjectHideFlags: 0
@@ -3442,6 +3468,10 @@ PrefabInstance:
     - target: {fileID: 4280420322197060171, guid: 0ebda6edae991404ea419be2e863ba31, type: 3}
       propertyPath: m_Name
       value: ShotgunBarrel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280420322197060171, guid: 0ebda6edae991404ea419be2e863ba31, type: 3}
+      propertyPath: m_TagString
+      value: Gunpart
       objectReference: {fileID: 0}
     - target: {fileID: 8293576194199199631, guid: 0ebda6edae991404ea419be2e863ba31, type: 3}
       propertyPath: m_RootOrder

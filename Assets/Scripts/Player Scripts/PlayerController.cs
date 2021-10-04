@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     public rotateScript aimer;
     private WeaponBase currentGun;
     public InteractionSphere inter;
-    private bool auto = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,19 +36,27 @@ public class PlayerController : MonoBehaviour
         }
 
         //Fire le gun
-        if (auto == false && currentGun != null) {
-            if (Input.GetButtonDown("Fire1"))
+        if (currentGun != null)
+        {
+            //If they are not auto
+            if (!currentGun.returnAuto())
             {
-                currentGun.OnFire();
+                if (Input.GetButtonDown("Fire1"))
+                {
+                    currentGun.OnFire();
+                }
+            }
+            //If they are auto
+            else if (currentGun.returnAuto())
+            {
+                if (Input.GetButton("Fire1"))
+                {
+                    currentGun.OnFire();
+                }
             }
         }
-        else if (auto == true && currentGun != null) {
-            if (Input.GetButton("Fire1"))
-            {
-                currentGun.OnFire();
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.E)) {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
             attemptPickup();
         }
     }
@@ -59,27 +66,35 @@ public class PlayerController : MonoBehaviour
         GameObject temp = inter.getPriority();
         if (temp != null)
         {
-            if (temp.tag == "Gun")
+            switch (temp.tag)
             {
-                if (temp.GetComponent<WeaponBase>().canPickup())
-                {
-                    temp.GetComponent<WeaponBase>().Onpickup();
-                    setGun(temp.GetComponent<WeaponBase>(), false);
-                }
+                case ("Gun"):
+                    if (temp.GetComponent<WeaponBase>().canPickup())
+                    {
+                        temp.GetComponent<WeaponBase>().Onpickup();
+                        setGun(temp.GetComponent<WeaponBase>());
+                    }
+                    break;
+
+                case ("Gunpart"):
+                    if (currentGun != null)
+                    {
+                        currentGun.Attach(temp.GetComponent<ModWeaponBase>());
+                    }
+                    break;
             }
         }
     }
 
-    public void setGun(WeaponBase newGun, bool isauto) {
+    public void setGun(WeaponBase newGun) {
         if (currentGun != null) {
-            Debug.Log("DROP ME!");
+            currentGun.transform.position = gameObject.transform.position;
             currentGun.Drop();
         }
         currentGun = newGun;
         newGun.transform.rotation = aimer.transform.rotation;
         newGun.transform.parent = aimer.gameObject.transform;
         newGun.transform.position = aimer.Crosshair.position;
-        auto = isauto;
     }
     public WeaponBase getGun() {
         return currentGun;

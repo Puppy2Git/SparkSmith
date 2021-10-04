@@ -19,10 +19,10 @@ public abstract class ModWeaponBase : MonoBehaviour
     private float dropDelay = 3f;
     private float dropTimerDelay = 0f;
     private bool canPick;
-
+    private Rigidbody2D body;
     private void Awake()
     {
-        
+        body = gameObject.GetComponent<Rigidbody2D>();  
         canPick = true;
         dropTimerDelay = 0f;
     }
@@ -41,16 +41,18 @@ public abstract class ModWeaponBase : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        /*
         if ((collision.gameObject.tag == "Player") && (canPick))
         {//If it is touching a gun and it can be picked up
-            
-            if (collision.gameObject.GetComponent<PlayerController>().getGun() != null)
+
+            if (collision.gameObject.tag == "Ground" && !ground && !holding)
             {
-                canPick = false;
-                collision.gameObject.GetComponent<PlayerController>().getGun().Attach(this);
-                gameObject.GetComponent<Collider2D>().enabled = false;
+                ground = true;
+                hoverInital = body.position.y;
+                body.velocity = new Vector3(body.velocity.x, 0);
             }
-            }
+        */
+        
     }
     public abstract float Attribute1();
     public abstract int Attribute2();
