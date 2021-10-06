@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public InteractionSphere inter;
     private SpriteRenderer skin;
     public float crosshairDefault = 2.5f;
+    private InventoryManagement inventory;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
         movement = gameObject.GetComponent<CharacterMovement>();
         location = gameObject.GetComponent<Transform>();
         skin = gameObject.GetComponent<SpriteRenderer>();
+        inventory = gameObject.GetComponent<InventoryManagement>();
         updateCrosshair();
     }
 
@@ -63,6 +65,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             attemptPickup();
+        }
+
+        if (Input.GetKeyDown(KeyCode.I)) {
+            inventory.toggleInventoy();
         }
 
         //Change Sprite Direction
