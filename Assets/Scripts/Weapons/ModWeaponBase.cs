@@ -107,7 +107,7 @@ public abstract class ModWeaponBase : MonoBehaviour
         holding = false;
         hoverTimer = 0f;
         transform.parent = null;
-        transform.eulerAngles = new Vector3(0, 0, -90);//Rotate by -90 or right
+        transform.eulerAngles = new Vector3(0, 0, 0);//Rotate by -90 or right
         ground = false;
     }
 }
