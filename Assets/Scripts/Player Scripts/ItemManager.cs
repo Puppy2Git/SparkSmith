@@ -11,13 +11,15 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
     private Vector2 offset = new Vector2(930,-440);
     private bool beingDragged = false;
     private GameObject target;
+
+    //TODO: FIX THIS
     public void setIcon(Sprite icon) {
         if (icon == null)
         {
             this.icon = icon;
             rect = gameObject.GetComponent<RectTransform>();
-            //UGLY
-            canvas = gameObject.transform.parent.parent.parent.parent.gameObject.GetComponent<Canvas>();
+            //UGLY somewhat better
+            canvas = gameObject.transform.parent.parent.parent.parent.gameObject.GetComponent<Canvas>();//Gets the canvas object
         }
     }
 
@@ -28,50 +30,49 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
         slot = gameObject.transform.parent.gameObject;
         setIcon(null);
     }
+    //Resets the position to the center of the slot
     public void resetPosition() {
         transform.SetParent(slot.transform, false);
         rect.anchoredPosition = new Vector2(0, 0);
         beingDragged = false;
     }
-    
+    //When it is stopped being dragged
     public void OnEndDrag(PointerEventData eventData) {
-        if (target != null)
+        if (target != null)//If there was a change in target
         {
-            Debug.Log("Changing parent.");
-            slot = target;
+            slot = target;//set the new target as the slot
         }
-        transform.SetParent(slot.transform, false);
-        rect.anchoredPosition = new Vector2(0, 0);
-        beingDragged = false;
+        transform.SetParent(slot.transform, false);//set the parent as the slot
+        rect.anchoredPosition = new Vector2(0, 0);//move it to the center
+        beingDragged = false;//Stop the drag
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        target = null;
-        if (beingDragged)
+        
+        if (beingDragged)//Well, yea
         {
-            if (collision.gameObject != slot)
-            {
-                if (collision.tag == "Slot" && collision.gameObject.transform.childCount == 0)
+            
+                if (collision.tag == "Slot" && collision.gameObject.transform.childCount == 0)//If it is a slot
                 {
-                    Debug.Log("Is valid");
-                    target = collision.gameObject;
+                    target = collision.gameObject;//NEW TARGET!
                 }
-            }
+            
         }
     }
 
-    public void OnBeginDrag(PointerEventData eventData) {
-        transform.SetParent(gameObject.transform.parent.parent.parent.transform,false);
-        rect.anchoredPosition = slot.GetComponent<RectTransform>().anchoredPosition - offset;
-        transform.SetAsLastSibling();
-        beingDragged = true;
+    public void OnBeginDrag(PointerEventData eventData) {//When first being dragged
+        target = null;//no new target
+        transform.SetParent(gameObject.transform.parent.parent.parent.transform,false);//parent is now higher up
+        rect.anchoredPosition = slot.GetComponent<RectTransform>().anchoredPosition - offset;//Anchor position is moved by a fixed offset
+        transform.SetAsLastSibling();//Last sib
+        beingDragged = true;//Is being dragged
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public void OnDrag(PointerEventData eventData)//While being dragged
     {
         
-        rect.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        rect.anchoredPosition += eventData.delta / canvas.scaleFactor;//Move it
         
         
     }

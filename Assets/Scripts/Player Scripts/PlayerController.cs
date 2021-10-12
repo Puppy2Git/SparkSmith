@@ -13,9 +13,11 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer skin;
     public float crosshairDefault = 2.5f;
     private InventoryManagement inventory;
+    private bool inputRestriction;
     // Start is called before the first frame update
     void Start()
     {
+        inputRestriction = false;
         player = gameObject;
         movement = gameObject.GetComponent<CharacterMovement>();
         location = gameObject.GetComponent<Transform>();
@@ -24,62 +26,79 @@ public class PlayerController : MonoBehaviour
         updateCrosshair();
     }
 
+
     // Update is called once per frame
     void Update()
     {
-        //Movement
-        movement.setHorizontal(Input.GetAxis("Horizontal"));
-
-        //Dash
-        if (Input.GetKeyDown(KeyCode.LeftShift)) {
-            movement.Dash();
-        }
-
-        //Jumping
-        if (Input.GetKeyDown(KeyCode.Space))
+        //If the input is not restricted
+        if (!inputRestriction)
         {
-            movement.Jump();
-        }
+            //Movement
+            movement.setHorizontal(Input.GetAxis("Horizontal"));
 
-        //Fire le gun
-        if (currentGun != null)
-        {
-            //If they are not auto
-            if (!currentGun.returnAuto())
+            //Dash
+            if (Input.GetKeyDown(KeyCode.LeftShift))
             {
-                if (Input.GetButtonDown("Fire1"))
+                movement.Dash();
+            }
+
+            //Jumping
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                movement.Jump();
+            }
+
+            //Fire le gun
+            if (currentGun != null)
+            {
+                //If they are not auto
+                if (!currentGun.returnAuto())
                 {
-                    currentGun.OnFire();
+                    if (Input.GetButtonDown("Fire1"))
+                    {
+                        currentGun.OnFire();
+                    }
+                }
+                //If they are auto
+                else if (currentGun.returnAuto())
+                {
+                    if (Input.GetButton("Fire1"))
+                    {
+                        currentGun.OnFire();
+                    }
                 }
             }
-            //If they are auto
-            else if (currentGun.returnAuto())
+            //Pick up le gun
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                if (Input.GetButton("Fire1"))
+                attemptPickup();
+            }
+
+
+
+            //Change Sprite Direction
+            if (aimer.Crosshair.position.x >= transform.position.x)
+            {
+                skin.flipX = false;
+                if (currentGun != null)
                 {
-                    currentGun.OnFire();
+                    currentGun.toggle_spriteFlip(false);
                 }
             }
+            else
+            {
+                skin.flipX = true;
+                if (currentGun != null)
+                {
+                    currentGun.toggle_spriteFlip(true);
+                }
         }
-        //Pick up le gun
-        if (Input.GetKeyDown(KeyCode.E))
+        }
+        //Press button to toggle inventory and movement
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            attemptPickup();
-        }
-
-        if (Input.GetKeyDown(KeyCode.I)) {
             inventory.toggleInventoy();
-        }
-
-        //Change Sprite Direction
-        if (aimer.Crosshair.position.x >= transform.position.x)
-        {
-            skin.flipX = false;
-
-        }
-        else
-        {
-            skin.flipX = true;
+            inputRestriction = !inputRestriction;
         }
     }
     //This function is called whenever the player presses the pick up key and handles the interation of what type it iteracts with
@@ -110,6 +129,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     //Handles updating the crosshair dependent on what the character has
+    //TODO: NEED TO FIX
     private void updateCrosshair()
     {
         if (currentGun != null)
@@ -122,14 +142,18 @@ public class PlayerController : MonoBehaviour
     }
     //Handles setting the new gun
     public void setGun(WeaponBase newGun) {
-        if (currentGun != null) {
-            currentGun.transform.position = gameObject.transform.position;
-            currentGun.Drop();
+        if (currentGun != null) {//If there is a gun
+            currentGun.transform.position = gameObject.transform.position;//Move the gun to the character
+            currentGun.Drop();//Drop it
+            
         }
-        currentGun = newGun;
-        newGun.transform.rotation = aimer.transform.rotation;
-        newGun.transform.parent = aimer.gameObject.transform;
-        newGun.transform.position = gameObject.transform.position + aimer.transform.up * 1f;
+        
+        currentGun = newGun;//Set the new gun
+        currentGun.setAimer(aimer);//Give the gun the RotateScript
+        newGun.transform.rotation = aimer.transform.rotation * Quaternion.AngleAxis(90,Vector3.forward);//Set it's rotation
+        newGun.transform.parent = aimer.gameObject.transform;//Set it's parent
+        newGun.transform.position = gameObject.transform.position + aimer.transform.up * 1f;//I's position
+        newGun.transform.localScale = new Vector3(1, 1, 1);//Make sure it is 1 to 1
         
     }
 

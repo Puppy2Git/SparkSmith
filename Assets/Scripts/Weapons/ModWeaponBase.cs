@@ -27,15 +27,21 @@ public abstract class ModWeaponBase : MonoBehaviour
     private float hoverInital;
     private bool ground;
     private bool holding;
-
+    private SpriteRenderer sprit;
     //Wakee Wakee
     private void Awake()
     {
+        sprit = gameObject.GetComponent<SpriteRenderer>();
         body = gameObject.GetComponent<Rigidbody2D>();  
         canPick = true;
         dropTimerDelay = 0f;
         ground = false;
         holding = false;
+    }
+
+    //Handles flipping of the sprite
+    public void toggle_spriteFlip(bool dir) {
+        sprit.flipY = dir;
     }
 
     //Update Loop
@@ -95,6 +101,7 @@ public abstract class ModWeaponBase : MonoBehaviour
 
     //When dropped
     public void Drop() {
+        sprit.flipY = false;
         gameObject.GetComponent<Collider2D>().enabled = true;
         dropTimerDelay = 0f;//Reset timer
         holding = false;

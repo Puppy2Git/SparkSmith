@@ -37,17 +37,18 @@ public class rotateScript : MonoBehaviour
     }
     
 
+    //Offsets = gun position + offsets
 
-    public void Fire(float randomspread)
+    public void Fire(float randomspread, Vector3 offests)
     {
         //Generates a new bullet
         
         GameObject bulletClone = Object_Pool.SharedInstance.GetPooledObject();
         if (bulletClone != null)
         {
-            bulletClone.transform.position = Crosshair.transform.position;
-            bulletClone.transform.rotation = transform.rotation;
-            bulletClone.SetActive(true);
+            bulletClone.transform.position = offests;//New positon
+            bulletClone.transform.rotation = transform.rotation;//Same rotation
+            bulletClone.SetActive(true);//Activate bullet
             //Sets it's direction and speed
             bulletClone.transform.Rotate(0f, 0f, Random.Range(-randomspread, randomspread));
             bulletClone.GetComponent<Rigidbody2D>().velocity = bulletClone.transform.up * bulletSpeed;

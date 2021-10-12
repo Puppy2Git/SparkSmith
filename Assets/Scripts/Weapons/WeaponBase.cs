@@ -5,7 +5,7 @@ using System;
 public class WeaponBase : MonoBehaviour
 {
 
-    public rotateScript aimer;
+    private rotateScript aimer;
     public bool auto = false;//Determins if the player needs to hold down the key or not
     public float fireRate = 0.0f;//How fast each bullet can fire
     public float bulletSpread = 0.0f;
@@ -30,10 +30,12 @@ public class WeaponBase : MonoBehaviour
     private bool holding;
     private bool ground;
     private Rigidbody2D body;
+    private SpriteRenderer sprit;
     // Start is called before the first frame update
     void Start()
     {
         body = gameObject.GetComponent<Rigidbody2D>();
+        sprit = gameObject.GetComponent<SpriteRenderer>();
         gameObject.tag = "Gun";
         fireTimer = fireRate;
         ground = false;
@@ -53,6 +55,15 @@ public class WeaponBase : MonoBehaviour
         }
         if (dropTimer >= dropDelay && ground) {
             canPick = true;
+        }
+    }
+
+    //Handles flipping of the gun and gun parts
+    public void toggle_spriteFlip(bool sprite) {
+        sprit.flipY = sprite;
+        if (barrel != null) {
+            barrel.toggle_spriteFlip(sprite);
+            updatePartFlip(barrel);
         }
     }
 
@@ -76,7 +87,30 @@ public class WeaponBase : MonoBehaviour
 
         
     }
+    public void setAimer(rotateScript aim) {
+        aimer = aim;
+    }
 
+    private Vector3 returnGunFirePosition() {
+        Vector3 tmp = new Vector3(0,0);
+        float barrelV = 0f;
+        if (barrel != null) {
+            barrelV = barrel.extraOffset;
+        }
+        if (sprit.flipY)
+        {
+            tmp = transform.position + (-barrelOffset.x * transform.up) + ((barrelOffset.y + barrelV) * transform.right);//Sets the rotation with an offset for connecting the parts
+        }
+        else
+        {
+            tmp = transform.position + (barrelOffset.x * transform.up) + ((barrelOffset.y + barrelV) * transform.right);//Sets the rotation with an offset for connecting the parts
+        }
+
+        if (barrel != null) { 
+        
+        }
+        return tmp;
+    }
 
     public void OnFire() {//Called given the input of PlayerController
         if (fireTimer >= fireRate) {//If any delay
@@ -86,24 +120,25 @@ public class WeaponBase : MonoBehaviour
                 
                 for (int i = 0; i <barrel.Attribute2(); i++)
                 {
-                    aimer.Fire(bulletSpread);
+                    aimer.Fire(bulletSpread,returnGunFirePosition());
                 }
             }
             else {
                 for (int i = 0; i < bulletShot; i++)
                 {
-                    aimer.Fire(bulletSpread);
+                    aimer.Fire(bulletSpread,returnGunFirePosition());
                 }
             }
             
         }
     }
     public void Drop() {
+        sprit.flipY = false;
         dropTimer = 0f;
         holding = false;
         hoverTimer = 0f;
         transform.parent = null;
-        transform.eulerAngles = new Vector3(0, 0, -90);//Rotate by -90 or right
+        transform.eulerAngles = new Vector3(0, 0, 0);
         ground = false;
         
     }
@@ -154,13 +189,21 @@ public class WeaponBase : MonoBehaviour
         
         
     }
+    //Handles updating the part fliping 
+    private void updatePartFlip(ModWeaponBase part) {
+        if (sprit.flipY)
+        {
+            part.transform.position = transform.position + (-barrelOffset.x * transform.up) + (barrelOffset.y * transform.right);//Sets the rotation with an offset for connecting the parts
+        }
+        else {
+            part.transform.position = transform.position + (barrelOffset.x * transform.up) + (barrelOffset.y * transform.right);//Sets the rotation with an offset for connecting the parts
+        }
+    }
     //Runned when attaching a part to the gun its self
     private void attachPartToGameworld(ModWeaponBase part) {
-        
         part.transform.parent = gameObject.transform;//Sets the part's parrent
         part.transform.rotation = transform.rotation;//Sets the part's rotation
-        part.transform.position = transform.position + (barrelOffset.x * transform.up) + (barrelOffset.y * transform.right);//Sets the rotation with an offset for connecting the parts
-
+        updatePartFlip(part);
     }
     //Returns the length of the gun plus the length of the barrel
     public float getTotalLength() {

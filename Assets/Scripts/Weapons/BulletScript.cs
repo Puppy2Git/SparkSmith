@@ -7,7 +7,6 @@ public class BulletScript : MonoBehaviour
 
     public float cleanupDelay;//How long the bullet should last if it fails to hit its target
     private float cleanupTimer;//Internal timer
-    public bool bactive;
     //Whether the bullet is the main or a copy
     // Start is called before the first frame update
     void Start()

@@ -6,6 +6,7 @@ public class SlotHolderScript : MonoBehaviour
 {
     private List<GameObject> allslots;
     public GameObject slotTemplate;
+    public InventoryManagement invi;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +19,7 @@ public class SlotHolderScript : MonoBehaviour
             tmp.transform.localScale = new Vector3(1, 1, 1);
             allslots.Add(tmp);
         }
+        invi.initInventory();
     }
 
     // Update is called once per frame

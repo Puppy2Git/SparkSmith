@@ -10,6 +10,7 @@ public class InteractionSphere : MonoBehaviour
     public float interacterOffsetY;
     // Start is called before the first frame update
     void Start()
+
     {
         interacter = Instantiate(interacter);
         interacter.SetActive(false);
@@ -21,27 +22,30 @@ public class InteractionSphere : MonoBehaviour
         UpdatePriority();
         ShowPriority();
     }
-
+    //This is called every frame to update which is the closest object
     private void UpdatePriority() {
-        for (int i = 0; i < interactables.Count; i++) {
-            if (interactables[i].transform.parent != null) {
-                interactables.Remove(interactables[i]);
+        for (int i = 0; i < interactables.Count; i++) {//Through all items in the list
+            if (interactables[i].transform.parent != null) {//If the item has a parent
+                interactables.Remove(interactables[i]);//Remove from list
             }
         }
+        //Otherwise sort list by which is closest to the player
         interactables = interactables.OrderBy(x => Vector3.Distance(x.transform.position, gameObject.transform.position)).ToList();
     }
-
+    //This is responsible for moving the priority icon
     private void ShowPriority() {
-        if (interactables.Count > 0)
+        if (interactables.Count > 0)//If there are at least 1 item
         {
-            interacter.transform.position = interactables[0].transform.position + new Vector3(0, interacterOffsetY);
+            //Move the icon at make sure it is active
+            interacter.transform.position = interactables[0].transform.position + new Vector3(interactables[0].GetComponent<Collider2D>().offset.x,0,0) + new Vector3(0, interacterOffsetY);
             interacter.SetActive(true);
         }
         else {
+            //deactivate the icon
             interacter.SetActive(false);
         }
     }
-
+    //Returns the gameobject with the most priority
     public GameObject getPriority() {
         if (interactables.Count > 0)
         {
