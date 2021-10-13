@@ -44,6 +44,10 @@ public abstract class ModWeaponBase : MonoBehaviour
         sprit.flipY = dir;
     }
 
+    public void store() {
+        gameObject.SetActive(false);
+    }
+
     //Update Loop
     private void Update()
     {

@@ -12,10 +12,11 @@ public class SlotHolderScript : MonoBehaviour
     {
         allslots = new List<GameObject>();
         GameObject tmp;
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 16; i++) {
             tmp = Instantiate(slotTemplate);
             tmp.transform.SetParent(gameObject.transform);
             tmp.tag = "Slot";
+            tmp.GetComponent<SlotManager>().position = i;
             tmp.transform.localScale = new Vector3(1, 1, 1);
             allslots.Add(tmp);
         }

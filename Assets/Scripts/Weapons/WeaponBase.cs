@@ -58,6 +58,10 @@ public class WeaponBase : MonoBehaviour
         }
     }
 
+    public void store() {
+        gameObject.SetActive(false);
+    }
+
     //Handles flipping of the gun and gun parts
     public void toggle_spriteFlip(bool sprite) {
         sprit.flipY = sprite;

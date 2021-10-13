@@ -4,31 +4,49 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-    private Sprite icon;
     private RectTransform rect;
     private Canvas canvas;
     private GameObject slot;
     private Vector2 offset = new Vector2(930,-440);
     private bool beingDragged = false;
     private GameObject target;
+    private GameObject item;
+    private Image icon;
+    //TODO: Done?
+    public void addIcon(GameObject item) {
+        this.item = item;
 
-    //TODO: FIX THIS
-    public void setIcon(Sprite icon) {
-        if (icon == null)
+        if (item != null)
         {
-            this.icon = icon;
-            rect = gameObject.GetComponent<RectTransform>();
-            //UGLY somewhat better
-            canvas = gameObject.transform.parent.parent.parent.parent.gameObject.GetComponent<Canvas>();//Gets the canvas object
+            icon.enabled = true;
+            icon.sprite = item.GetComponent<SpriteRenderer>().sprite;
         }
     }
 
+    public bool isFull() {
+        if (item != null)
+        {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public GameObject returnItem() {
+        return item;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        icon = gameObject.GetComponent<Image>();
+        icon.enabled = false;
         slot = gameObject.transform.parent.gameObject;
-        setIcon(null);
+        addIcon(null);
+        rect = gameObject.GetComponent<RectTransform>();
+        //UGLY somewhat better
+        canvas = gameObject.transform.parent.parent.parent.parent.gameObject.GetComponent<Canvas>();//Gets the canvas object
     }
     //Resets the position to the center of the slot
     public void resetPosition() {
@@ -38,13 +56,28 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
     }
     //When it is stopped being dragged
     public void OnEndDrag(PointerEventData eventData) {
-        if (target != null)//If there was a change in target
+        if (target != null && target != slot)
         {
-            slot = target;//set the new target as the slot
+            target.GetComponent<SlotManager>().updatepositions(target.GetComponent<SlotManager>().position, slot.GetComponent<SlotManager>().position);
+
+            target.transform.GetChild(0).GetComponent<ItemManager>().setNewPosition(slot);
+            setNewPosition(target);
+        }
+        else {
+            setNewPosition(target);
+        }
+        beingDragged = false;//Stop the drag
+    }
+
+    public void setNewPosition(GameObject end)
+    {
+        if (end != null)//If there was a change in target
+        {
+            slot = end;//set the new target as the slot
         }
         transform.SetParent(slot.transform, false);//set the parent as the slot
         rect.anchoredPosition = new Vector2(0, 0);//move it to the center
-        beingDragged = false;//Stop the drag
+        
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -53,7 +86,7 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
         if (beingDragged)//Well, yea
         {
             
-                if (collision.tag == "Slot" && collision.gameObject.transform.childCount == 0)//If it is a slot
+                if (collision.tag == "Slot")//If it is a slot
                 {
                     target = collision.gameObject;//NEW TARGET!
                 }

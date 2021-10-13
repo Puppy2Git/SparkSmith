@@ -92,7 +92,10 @@ public class PlayerController : MonoBehaviour
                 {
                     currentGun.toggle_spriteFlip(true);
                 }
+            }
         }
+        else {
+            movement.setHorizontal(0f);
         }
         //Press button to toggle inventory and movement
         if (Input.GetKeyDown(KeyCode.I))
@@ -112,17 +115,23 @@ public class PlayerController : MonoBehaviour
                 case ("Gun")://If the character picked up a gun
                     if (temp.GetComponent<WeaponBase>().canPickup())
                     {
-                        temp.GetComponent<WeaponBase>().Onpickup();
-                        setGun(temp.GetComponent<WeaponBase>());
+                        
+                        //setGun(temp.GetComponent<WeaponBase>());
+                        inventory.addItem(temp);
                     }
+                    
                     break;
 
                 case ("Gunpart")://If the character picked up a gunpart
                     if (currentGun != null)//If the character has a gun
                     {
-                        currentGun.Attach(temp.GetComponent<ModWeaponBase>());
-                        
+                        //currentGun.Attach(temp.GetComponent<ModWeaponBase>());
+
                     }
+                    else {
+                        //inventory.addItem(temp);
+                    }
+                    inventory.addItem(temp);
                     break;
             }
             updateCrosshair();//Update the distance of the crosshair.
@@ -142,6 +151,7 @@ public class PlayerController : MonoBehaviour
     }
     //Handles setting the new gun
     public void setGun(WeaponBase newGun) {
+        newGun.GetComponent<WeaponBase>().Onpickup();
         if (currentGun != null) {//If there is a gun
             currentGun.transform.position = gameObject.transform.position;//Move the gun to the character
             currentGun.Drop();//Drop it
