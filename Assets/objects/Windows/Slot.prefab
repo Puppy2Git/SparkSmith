@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0221e658b7c5d47e6ac4657493184279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doubleclickDelay: 0.5
 --- !u!61 &5044445066341730515
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -227,6 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a78aa74086e04ee29097e7b30df8b19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  position: 0
 --- !u!61 &5044445067266683652
 BoxCollider2D:
   m_ObjectHideFlags: 0

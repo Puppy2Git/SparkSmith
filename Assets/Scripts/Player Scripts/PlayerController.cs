@@ -71,9 +71,12 @@ public class PlayerController : MonoBehaviour
             //Pick up le gun
             if (Input.GetKeyDown(KeyCode.E))
             {
-                attemptPickup();
+                attemptPickup(0, inter.getPriority());
             }
-
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                attemptPickup(1, inter.getPriority());
+            }
 
 
             //Change Sprite Direction
@@ -94,7 +97,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        else {
+        else
+        {
             movement.setHorizontal(0f);
         }
         //Press button to toggle inventory and movement
@@ -103,11 +107,21 @@ public class PlayerController : MonoBehaviour
             inventory.toggleInventoy();
             inputRestriction = !inputRestriction;
         }
+        //Handles checking
+        if (inventory.SlotToEquip != -1)
+        {
+            Debug.Log("lol");
+            attemptPickup(2, inventory.getItem(inventory.SlotToEquip));
+            inventory.SlotToEquip = -1;
+        }
     }
-    //This function is called whenever the player presses the pick up key and handles the interation of what type it iteracts with
-    private void attemptPickup() {
 
-        GameObject temp = inter.getPriority();//Setting to a temp gameObject
+    
+    //This function is called whenever the player presses the pick up key and handles the interation of what type it iteracts with
+    private void attemptPickup(int dir, GameObject temp)
+    {
+        //if dir is true, go to inventory otherwise go/attemp to attach to hand if that fails go to inventory
+        //Setting to a temp gameObject
         if (temp != null)//If there is a gameObject.
         {
             switch (temp.tag)//Instead of a long if else chain
@@ -115,23 +129,42 @@ public class PlayerController : MonoBehaviour
                 case ("Gun")://If the character picked up a gun
                     if (temp.GetComponent<WeaponBase>().canPickup())
                     {
-                        
-                        //setGun(temp.GetComponent<WeaponBase>());
-                        inventory.addItem(temp);
+                        if (dir == 1)
+                        {
+                            setGun(temp.GetComponent<WeaponBase>());
+                            inventory.addItem(temp, true);
+                            Debug.Log("E");
+                        }
+                        else if (dir == 0)
+                        {
+                            inventory.addItem(temp, false);
+                        }
+                        else if (dir == 2) {
+                            setGun(temp.GetComponent<WeaponBase>());
+                        }
                     }
-                    
+
                     break;
 
                 case ("Gunpart")://If the character picked up a gunpart
-                    if (currentGun != null)//If the character has a gun
-                    {
-                        //currentGun.Attach(temp.GetComponent<ModWeaponBase>());
 
+                    if (dir == 1 && currentGun != null)//If the character has a gun and wants to attach it
+                    {
+                        GameObject mod = currentGun.Attach(temp.GetComponent<ModWeaponBase>());
+                        inventory.removeItem(temp);
+                        if (mod != null)
+                        {
+                            inventory.addItem(mod, false);
+                        }
                     }
-                    else {
-                        //inventory.addItem(temp);
+                    else if (dir == 0)
+                    {
+                        inventory.addItem(temp, false);
                     }
-                    inventory.addItem(temp);
+                    else if (dir == 3 && currentGun != null) {
+                        currentGun.Attach(temp.GetComponent<ModWeaponBase>());
+                        inventory.removeItem(temp);
+                    }
                     break;
             }
             updateCrosshair();//Update the distance of the crosshair.
@@ -143,32 +176,36 @@ public class PlayerController : MonoBehaviour
     {
         if (currentGun != null)
         {
-            aimer.updateCrosshairLength(currentGun.getTotalLength() + crosshairDefault/2);
+            aimer.updateCrosshairLength(currentGun.getTotalLength() + crosshairDefault / 2);
         }
-        else {
+        else
+        {
             aimer.updateCrosshairLength(crosshairDefault);
         }
     }
     //Handles setting the new gun
-    public void setGun(WeaponBase newGun) {
+    public void setGun(WeaponBase newGun)
+    {
+        Debug.Log("Setting");
         newGun.GetComponent<WeaponBase>().Onpickup();
-        if (currentGun != null) {//If there is a gun
-            currentGun.transform.position = gameObject.transform.position;//Move the gun to the character
-            currentGun.Drop();//Drop it
-            
+        if (currentGun != null)
+        {//If there is a gun
+            inventory.storeItem(currentGun.gameObject);
+
         }
-        
+
         currentGun = newGun;//Set the new gun
         currentGun.setAimer(aimer);//Give the gun the RotateScript
-        newGun.transform.rotation = aimer.transform.rotation * Quaternion.AngleAxis(90,Vector3.forward);//Set it's rotation
+        newGun.transform.rotation = aimer.transform.rotation * Quaternion.AngleAxis(90, Vector3.forward);//Set it's rotation
         newGun.transform.parent = aimer.gameObject.transform;//Set it's parent
         newGun.transform.position = gameObject.transform.position + aimer.transform.up * 1f;//I's position
         newGun.transform.localScale = new Vector3(1, 1, 1);//Make sure it is 1 to 1
-        
+
     }
 
     //Returns gun
-    public WeaponBase getGun() {
+    public WeaponBase getGun()
+    {
         return currentGun;
     }
 }

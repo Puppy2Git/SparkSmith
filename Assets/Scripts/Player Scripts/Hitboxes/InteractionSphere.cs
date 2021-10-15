@@ -8,6 +8,7 @@ public class InteractionSphere : MonoBehaviour
     public List<GameObject> interactables = new List<GameObject>();
     public GameObject interacter;
     public float interacterOffsetY;
+    public InteractionText text;
     // Start is called before the first frame update
     void Start()
 
@@ -38,10 +39,13 @@ public class InteractionSphere : MonoBehaviour
         {
             //Move the icon at make sure it is active
             interacter.transform.position = interactables[0].transform.position + new Vector3(interactables[0].GetComponent<Collider2D>().offset.x,0,0) + new Vector3(0, interacterOffsetY);
+            text.moveto(interacter.transform.position);
             interacter.SetActive(true);
+            text.showThing(true);
         }
         else {
             //deactivate the icon
+            text.showThing(false);
             interacter.SetActive(false);
         }
     }

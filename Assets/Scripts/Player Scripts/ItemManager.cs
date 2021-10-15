@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEndDragHandler
+public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
     private RectTransform rect;
     private Canvas canvas;
@@ -12,6 +12,9 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
     private GameObject target;
     private GameObject item;
     private Image icon;
+    private float doubleclickDelay = 0.5f;
+    private float doubleclickTimer;
+    private bool doubleclickWindow;
     //TODO: Done?
     public void addIcon(GameObject item) {
         this.item = item;
@@ -35,6 +38,16 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
 
     public GameObject returnItem() {
         return item;
+    }
+
+    void Update() {
+        if (doubleclickWindow) {
+            doubleclickTimer += Time.deltaTime;
+            if (doubleclickTimer >= doubleclickDelay) {//If a double click
+                doubleclickWindow = false;
+                
+            }
+        }
     }
 
     // Start is called before the first frame update
@@ -91,6 +104,19 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
                     target = collision.gameObject;//NEW TARGET!
                 }
             
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData) {
+        if (!doubleclickWindow)
+        {
+            doubleclickWindow = true;
+            doubleclickTimer = 0.0f;
+        }
+        else {
+            doubleclickWindow = false;
+            slot.GetComponent<SlotManager>().requestEquip();
+
         }
     }
 

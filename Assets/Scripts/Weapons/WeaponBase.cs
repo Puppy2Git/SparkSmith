@@ -147,15 +147,16 @@ public class WeaponBase : MonoBehaviour
         
     }
     //Attaches a Gun Part to the gun base/Stock
-    public void Attach(ModWeaponBase gunpart)
+    public GameObject Attach(ModWeaponBase gunpart)
     {
-        
+        GameObject toreturn = null;
         switch (gunpart.type)
         {
             case PartType.Barrel:
                 
                 if (barrel != null)
                 {//If barrel does exists
+                    toreturn = barrel.gameObject;
                     barrel.Drop();//Drop current part
                     
                 }
@@ -190,7 +191,7 @@ public class WeaponBase : MonoBehaviour
         }
         gunpart.attached();
         attachPartToGameworld(gunpart);//Attach to gameworld
-        
+        return toreturn;
         
     }
     //Handles updating the part fliping 
@@ -225,6 +226,7 @@ public class WeaponBase : MonoBehaviour
     }
     //When it is picked up
     public void Onpickup() {
+        gameObject.SetActive(true);
         holding = true;
         canPick = false;
         ground = false;

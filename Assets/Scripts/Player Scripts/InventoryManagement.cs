@@ -11,12 +11,12 @@ public class InventoryManagement : MonoBehaviour
     private GameObject[] slot;
     public GameObject[] slot_items;
     public GameObject slotHolder;
-    
+    public int SlotToEquip = -1;
     //Toggles the inventory
     public void toggleInventoy() {
         InventoryEnabled = !InventoryEnabled;
     }
-    public void addItem(GameObject item) {
+    public void addItem(GameObject item, bool equiped) {
         bool done = false;
         for (int i = 0; i < allSlots; i++) {
             if (slot_items[i] == null && !done) {
@@ -24,7 +24,10 @@ public class InventoryManagement : MonoBehaviour
                 done = true;
                 switch (item.tag) {
                     case ("Gun"):
-                        item.GetComponent<WeaponBase>().store();
+                        if (!equiped) {
+                            item.GetComponent<WeaponBase>().store();
+
+                        }
                         break;
                     case ("Gunpart"):
                         item.GetComponent<ModWeaponBase>().store();
@@ -37,6 +40,31 @@ public class InventoryManagement : MonoBehaviour
             if (!slot[i].GetComponent<SlotManager>().isFull() && !done) {
                 slot[i].GetComponent<SlotManager>().addItem(item);
                 done = true;
+            }
+        }
+    }
+    public GameObject getItem(int pos) {
+        return slot_items[pos];
+    }
+    public void storeItem(GameObject item) {
+        bool isin = false;
+        for (int i = 0; i < allSlots; i++) {
+            if (slot_items[i] == item) {
+                isin = true;
+                break;
+            }
+        }
+        if (isin) {
+            switch (item.tag)
+            {
+                case ("Gun"):
+                    item.GetComponent<WeaponBase>().store();
+
+                    
+                    break;
+                case ("Gunpart"):
+                    item.GetComponent<ModWeaponBase>().store();
+                    break;
             }
         }
     }
@@ -77,5 +105,11 @@ public class InventoryManagement : MonoBehaviour
     {
         //Updates inventory active
         Inventory.SetActive(InventoryEnabled);
+        for (int i = 0; i < allSlots; i++) {
+            if (slot[i].GetComponent<SlotManager>().Equip == true) {
+                SlotToEquip = i;
+                slot[i].GetComponent<SlotManager>().Equip = false;
+            }
+        }
     }
 }

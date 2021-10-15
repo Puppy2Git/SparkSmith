@@ -9,6 +9,7 @@ public class SlotManager : MonoBehaviour
     private ItemManager item;
     private GameObject inv;
     public int position;
+    public bool Equip;
     //This is run whenever the slot is occupied gets a new image to use
 
     public bool isFull() {
@@ -28,6 +29,10 @@ public class SlotManager : MonoBehaviour
         inv = inven;
         item = gameObject.transform.GetChild(0).GetComponent<ItemManager>();
         
+    }
+
+    public void requestEquip() {
+        Equip = true;
     }
 
     public void updatepositions(int pos1, int pos2) {
