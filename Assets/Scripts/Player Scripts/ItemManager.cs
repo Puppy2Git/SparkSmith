@@ -24,6 +24,10 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
             icon.enabled = true;
             icon.sprite = item.GetComponent<SpriteRenderer>().sprite;
         }
+        else {
+            icon.enabled = false;
+            icon.sprite = null;
+        }
     }
 
     public bool isFull() {
@@ -69,16 +73,19 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
     }
     //When it is stopped being dragged
     public void OnEndDrag(PointerEventData eventData) {
-        if (target != null && target != slot)
+        if (target == null)
+        {
+            setNewPosition(slot);
+            slot.GetComponent<SlotManager>().dropItem();
+        }
+        else if (target != slot)
         {
             target.GetComponent<SlotManager>().updatepositions(target.GetComponent<SlotManager>().position, slot.GetComponent<SlotManager>().position);
 
             target.transform.GetChild(0).GetComponent<ItemManager>().setNewPosition(slot);
             setNewPosition(target);
         }
-        else {
-            setNewPosition(target);
-        }
+        //Didn't drag into a box at all lmao
         beingDragged = false;//Stop the drag
     }
 
@@ -98,11 +105,15 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
         
         if (beingDragged)//Well, yea
         {
-            
-                if (collision.tag == "Slot")//If it is a slot
-                {
-                    target = collision.gameObject;//NEW TARGET!
-                }
+
+            if (collision.tag == "Slot")//If it is a slot
+            {
+                target = collision.gameObject;//NEW TARGET!
+            }
+            else if (collision.tag == "Dump") {
+                target = null;
+                
+            }
             
         }
     }
@@ -121,7 +132,7 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
     }
 
     public void OnBeginDrag(PointerEventData eventData) {//When first being dragged
-        target = null;//no new target
+        target = slot;//no new target
         transform.SetParent(gameObject.transform.parent.parent.parent.transform,false);//parent is now higher up
         rect.anchoredPosition = slot.GetComponent<RectTransform>().anchoredPosition - offset;//Anchor position is moved by a fixed offset
         transform.SetAsLastSibling();//Last sib

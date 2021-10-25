@@ -8,6 +8,7 @@ public class InteractionText : MonoBehaviour
     private RectTransform rect;
     private Text text;
     public InteractionSphere inter;
+    private bool active = true;
     private Vector3 offset = new Vector3(-2f,0.5f);//The size of the thing
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,11 @@ public class InteractionText : MonoBehaviour
         
         rect.transform.position = pos + offset;
     }
+    public void toggleTextbox() {
+        active = !active;
+        gameObject.SetActive(active);
+    }
+
     // Update is called once per frame
     void Update()
     {

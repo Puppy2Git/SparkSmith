@@ -12,6 +12,7 @@ public class InventoryManagement : MonoBehaviour
     public GameObject[] slot_items;
     public GameObject slotHolder;
     public int SlotToEquip = -1;
+    public GameObject toDropGun = null;
     //Toggles the inventory
     public void toggleInventoy() {
         InventoryEnabled = !InventoryEnabled;
@@ -74,6 +75,26 @@ public class InventoryManagement : MonoBehaviour
                 slot[i].GetComponent<SlotManager>().addItem(null);
             }
         }
+        for (int i = 0; i < allSlots; i++)
+        {
+            if (slot_items[i] == item)
+            {
+                switch (slot_items[i].tag) {
+                    case ("Gun"):
+                        slot_items[i].GetComponent<WeaponBase>().Drop();
+                        break;
+                    case ("Gunpart"):
+                        slot_items[i].GetComponent<ModWeaponBase>().Drop();
+                        break;
+                }
+
+                toDropGun = slot_items[i];
+                slot_items[i] = null;
+                
+            }
+        }
+
+
     }
 
     // Start is called before the first frame update

@@ -34,7 +34,10 @@ public class SlotManager : MonoBehaviour
     public void requestEquip() {
         Equip = true;
     }
-
+    public void dropItem() {
+        inv.GetComponent<InventoryManagement>().removeItem(inv.GetComponent<InventoryManagement>().getItem(position));
+        addItem(null);
+    }
     public void updatepositions(int pos1, int pos2) {
         inv.GetComponent<InventoryManagement>().SwapPositions(pos1, pos2);
     }

@@ -82,6 +82,7 @@ public abstract class ModWeaponBase : MonoBehaviour
     }
     //Called when attached to a gun
     public void attached() {
+        gameObject.SetActive(true);
         holding = true;
         ground = true;
         gameObject.GetComponent<Collider2D>().enabled = false;
@@ -105,6 +106,7 @@ public abstract class ModWeaponBase : MonoBehaviour
 
     //When dropped
     public void Drop() {
+        gameObject.SetActive(true);
         sprit.flipY = false;
         gameObject.GetComponent<Collider2D>().enabled = true;
         dropTimerDelay = 0f;//Reset timer
