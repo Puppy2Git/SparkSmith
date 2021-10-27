@@ -113,11 +113,15 @@ public class PlayerController : MonoBehaviour
         if (inventory.SlotToEquip != -1)
         {
             attemptPickup(true, inventory.getItem(inventory.SlotToEquip),true);
+            Debug.Log("Equiped");
             inventory.SlotToEquip = -1;
         }
         if (inventory.toDropGun != null) {
-            if (currentGun == inventory.toDropGun) {
+            Debug.Log(inventory.toDropGun.name);
+            Debug.Log(currentGun.name);
+            if (currentGun.Equals(inventory.toDropGun)) {
                 setGun(null);
+                Debug.Log("Dropping current gun");
             }
             inventory.toDropGun = null;
         }
@@ -161,15 +165,16 @@ public class PlayerController : MonoBehaviour
 
                     if (currentGun != null)
                     {
-                        temp.transform.SetParent(gameObject.transform);
+                        
                         if (dir)
                         {
                             
                             GameObject toswap = null;
-                            toswap = currentGun.Attach(temp.GetComponent<ModWeaponBase>());
                             inventory.removeItem(temp);
+                            toswap = currentGun.Attach(temp.GetComponent<ModWeaponBase>());
                             if (toswap != null) {
                                 inventory.addItem(toswap, false);
+                                
                             }
                             
                         }
@@ -227,8 +232,11 @@ public class PlayerController : MonoBehaviour
             newGun.transform.localScale = new Vector3(1, 1, 1);//Make sure it is 1 to 1
         }
         else {
+            
             currentGun = null;
+
         }
+        updateCrosshair();//Update the distance of the crosshair.
     }
 
     //Returns gun
