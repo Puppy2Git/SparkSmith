@@ -8,6 +8,7 @@ public class SlotManager : MonoBehaviour
     private GameObject slotItem;
     private ItemManager item;
     private GameObject inv;
+    private SelectorScript selector;
     public int position;
     public bool Equip;
     //This is run whenever the slot is occupied gets a new image to use
@@ -29,6 +30,10 @@ public class SlotManager : MonoBehaviour
         inv = inven;
         item = gameObject.transform.GetChild(0).GetComponent<ItemManager>();
         
+    }
+
+    public void requestSelector() {
+
     }
 
     public void requestEquip() {

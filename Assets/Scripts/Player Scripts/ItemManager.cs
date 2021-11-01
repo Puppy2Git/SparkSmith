@@ -105,12 +105,14 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
         
         if (beingDragged)//Well, yea
         {
-
+            Debug.Log("Being Dragged");
             if (collision.tag == "Slot")//If it is a slot
             {
+                Debug.Log("A slot");
                 target = collision.gameObject;//NEW TARGET!
             }
             else if (collision.tag == "Dump") {
+                Debug.Log("Dump!");
                 target = null;
                 
             }
@@ -119,6 +121,7 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
     }
 
     public void OnPointerClick(PointerEventData eventData) {
+        slot.GetComponent<SlotManager>().requestSelector();
         if (!doubleclickWindow)
         {
             doubleclickWindow = true;

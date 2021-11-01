@@ -27,7 +27,7 @@ public class InventoryManagement : MonoBehaviour
                     case ("Gun"):
                         if (!equiped) {
                             item.GetComponent<WeaponBase>().store();
-
+                            
                         }
                         break;
                     case ("Gunpart"):
@@ -40,9 +40,11 @@ public class InventoryManagement : MonoBehaviour
         for (int i = 0; i < allSlots; i++) {
             if (!slot[i].GetComponent<SlotManager>().isFull() && !done) {
                 slot[i].GetComponent<SlotManager>().addItem(item);
+                Debug.Log("Added slot " + i + " and item " + slot_items[i].name);
                 done = true;
             }
         }
+        
     }
     public GameObject getItem(int pos) {
         return slot_items[pos];
@@ -73,6 +75,7 @@ public class InventoryManagement : MonoBehaviour
         for (int i = 0; i < allSlots; i++) {
             if (slot[i].GetComponent<SlotManager>().returnItem() == item) {
                 slot[i].GetComponent<SlotManager>().addItem(null);
+                break;
             }
         }
         for (int i = 0; i < allSlots; i++)
@@ -87,10 +90,10 @@ public class InventoryManagement : MonoBehaviour
                         slot_items[i].GetComponent<ModWeaponBase>().Drop();
                         break;
                 }
-
+                Debug.Log("Cleared slot " + i + " and item " + slot_items[i].name);
                 toDropGun = slot_items[i];
                 slot_items[i] = null;
-                
+                break;
             }
         }
 

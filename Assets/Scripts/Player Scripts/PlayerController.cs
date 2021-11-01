@@ -113,15 +113,16 @@ public class PlayerController : MonoBehaviour
         if (inventory.SlotToEquip != -1)
         {
             attemptPickup(true, inventory.getItem(inventory.SlotToEquip),true);
-            Debug.Log("Equiped");
+            
             inventory.SlotToEquip = -1;
         }
         if (inventory.toDropGun != null) {
-            Debug.Log(inventory.toDropGun.name);
-            Debug.Log(currentGun.name);
-            if (currentGun.Equals(inventory.toDropGun)) {
-                setGun(null);
-                Debug.Log("Dropping current gun");
+            if (currentGun != null)
+            {
+                if (currentGun.gameObject == inventory.toDropGun)
+                {
+                    setGun(null);
+                }
             }
             inventory.toDropGun = null;
         }
