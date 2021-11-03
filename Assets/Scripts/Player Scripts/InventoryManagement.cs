@@ -39,8 +39,11 @@ public class InventoryManagement : MonoBehaviour
         done = false;
         for (int i = 0; i < allSlots; i++) {
             if (!slot[i].GetComponent<SlotManager>().isFull() && !done) {
-                slot[i].GetComponent<SlotManager>().addItem(item);
-                Debug.Log("Added slot " + i + " and item " + slot_items[i].name);
+                if (slot_items[i] != null)
+                {
+                    slot[i].GetComponent<SlotManager>().addItem(item);
+                    Debug.Log("Added slot " + i + " and item " + slot_items[i].name);
+                }
                 done = true;
             }
         }

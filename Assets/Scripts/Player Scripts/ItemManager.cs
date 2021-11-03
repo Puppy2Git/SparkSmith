@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
+public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler
 {
     private RectTransform rect;
     private Canvas canvas;
@@ -85,6 +85,7 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
             target.transform.GetChild(0).GetComponent<ItemManager>().setNewPosition(slot);
             setNewPosition(target);
         }
+        slot.GetComponent<SlotManager>().requestSelector();
         //Didn't drag into a box at all lmao
         beingDragged = false;//Stop the drag
     }
@@ -105,14 +106,14 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
         
         if (beingDragged)//Well, yea
         {
-            Debug.Log("Being Dragged");
+            
             if (collision.tag == "Slot")//If it is a slot
             {
-                Debug.Log("A slot");
+                
                 target = collision.gameObject;//NEW TARGET!
             }
             else if (collision.tag == "Dump") {
-                Debug.Log("Dump!");
+                
                 target = null;
                 
             }
@@ -132,6 +133,10 @@ public class ItemManager : MonoBehaviour , IDragHandler, IBeginDragHandler, IEnd
             slot.GetComponent<SlotManager>().requestEquip();
 
         }
+    }
+
+    public void OnPointerDown(PointerEventData eventData) {
+        slot.GetComponent<SlotManager>().requestSelector();
     }
 
     public void OnBeginDrag(PointerEventData eventData) {//When first being dragged

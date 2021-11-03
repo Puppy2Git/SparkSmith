@@ -8,7 +8,7 @@ public class SlotManager : MonoBehaviour
     private GameObject slotItem;
     private ItemManager item;
     private GameObject inv;
-    private SelectorScript selector;
+    public SelectorScript selector;
     public int position;
     public bool Equip;
     //This is run whenever the slot is occupied gets a new image to use
@@ -33,7 +33,7 @@ public class SlotManager : MonoBehaviour
     }
 
     public void requestSelector() {
-
+        selector.moveselector(gameObject);
     }
 
     public void requestEquip() {

@@ -6,6 +6,7 @@ public class SlotHolderScript : MonoBehaviour
 {
     private List<GameObject> allslots;
     public GameObject slotTemplate;
+    public SelectorScript select;
     public InventoryManagement invi;
     // Start is called before the first frame update
     void Start()
@@ -14,6 +15,7 @@ public class SlotHolderScript : MonoBehaviour
         GameObject tmp;
         for (int i = 0; i < 16; i++) {
             tmp = Instantiate(slotTemplate);
+            tmp.GetComponent<SlotManager>().selector = select;
             tmp.transform.SetParent(gameObject.transform);
             tmp.tag = "Slot";
             tmp.GetComponent<SlotManager>().position = i;
